@@ -1,0 +1,17 @@
+@import "fonts";
+@import "colors";
+@import "variables";
+
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  padding: 0;
+    margin: 0 auto;
+    .container {
+        max-width: 1440px;
+        margin: auto;
+    }
+}
