@@ -1,0 +1,133 @@
+<template lang="pug">
+.side-bar
+    ul.tabs(:class="{ active: hide }")
+        li.tab(:class="{ active: currentTab === 1 }")
+            img(src="../assets/img/tasks.png")
+            a(href="#tab1" @click="showTabContent(1)") Задачі
+        li.tab(:class="{ active: currentTab === 2 }")
+            img(src="../assets/img/windows.svg")
+            a(href="#tab2" @click="showTabContent(2)") Компоненти
+        li.tab(:class="{ active: currentTab === 3 }")
+            img(src="../assets/img/board.svg")
+            a(href="#tab3" @click="showTabContent(3)") Дошка KANBAN
+    button.close(@click="hideBar" :class="{ active: hide }")
+    .tab-content(:class="{ active: hide }")
+      .tab-item(v-show="currentTab === 1" id="tab1-content" :class="{ active: hide }")
+        | Content for Tab 1
+      .tab-item(v-show="currentTab === 2" id="tab2-content" :class="{ active: hide }")
+        | Content for Tab 2
+      .tab-item(v-show="currentTab === 3" id="tab3-content" :class="{ active: hide }")
+        TaskItem
+</template>
+
+<script lang="ts" setup>
+import TaskItem from "@/components/TaskItem.vue";
+import { ref } from "vue";
+const currentTab = ref(1);
+const hide = ref(false);
+
+const showTabContent = (tab: number) => {
+  currentTab.value = tab;
+};
+const hideBar = () => {
+  if (!hide.value) {
+    hide.value = true;
+  } else {
+    hide.value = false;
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../styles/core/global.scss";
+.side-bar {
+  display: flex;
+  .tab-item {
+    margin-left: 30px;
+  }
+  .tab-content.active {
+    transform: translate(-210px, 10px);
+  }
+  .close {
+    height: 30px;
+    margin: 240px -18px;
+    width: 30px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    &::after {
+      content: "";
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-right: 9px solid #8cb2dc;
+      margin-right: 3px;
+    }
+  }
+  .close.active {
+    transform: translate(-230px, 0px);
+    &::after {
+      border-left: 9px solid #8cb2dc;
+      margin-right: -3px;
+      border-right: none;
+    }
+  }
+  ul.active {
+    transform: translate(-230px, 0px);
+  }
+  ul {
+    background: url("../assets/img/bg-tablet.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.25));
+    width: 240px;
+    li {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      &.active {
+        border-radius: 6px;
+        background: #d4d8dc;
+      }
+
+      img {
+        margin-right: 10px;
+        height: 24px;
+      }
+      a {
+        font-family: "Inter", sans-serif;
+        font-size: 18px;
+        line-height: 20px;
+        color: $black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+    .close {
+      position: absolute;
+      right: -22px;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .side-bar {
+    .tab-content.active {
+      transform: translate(-178px, 10px);
+    }
+    .close.active {
+      transform: translate(-178px, 0px);
+    }
+    ul.active {
+      transform: translate(-178px, 0px);
+    }
+  }
+}
+
+</style>

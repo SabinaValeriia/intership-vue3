@@ -13,24 +13,26 @@
       input#password(:class="{ error: isError }" type="password" placeholder="Type your password" v-model.trim="password" @input="checkPassword" @blur="checkPassword")
       .error-message(v-if="passwordError") {{ passwordError }}
       button.forgot Forgot your password?
-      button.main.log-in(type="submit")#submit Log in
+      router-link.main.log-in(to="/tasks" type="submit" @click="submit")#submit Log in
       p.login--distance New user? 
         button.sign-up Sign up
     img.account--logo(src="../assets/img/academy-logo.svg")
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import router from "@/router";
+import { ref } from "vue";
 
-const email = ref('');
-const password = ref('');
-const emailError = ref('');
-const passwordError = ref('');
+const email = ref("");
+const password = ref("");
+const emailError = ref("");
+const passwordError = ref("");
 const isError = ref(false);
 const isEmail = (email: string): boolean => {
-
-//eslint-disable-next-line
-  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  //eslint-disable-next-line
+  const emailRegex =
+  // eslint-disable-next-line
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   return emailRegex.test(email);
 };
@@ -41,6 +43,10 @@ const isPassword = (password: string): boolean => {
   return !passwordRegex;
 };
 
+const submit = () => {
+  localStorage.setItem("isAuthenticated", "true");
+  router.push("/tasks");
+};
 
 const checkEmail = () => {
   const emailValue = email.value.trim();
@@ -56,14 +62,14 @@ const checkEmail = () => {
   }
 };
 
-
 const checkPassword = () => {
   const passwordValue = password.value.trim();
   if (!passwordValue) {
     passwordError.value = "Password cannot be blank";
     isError.value = true;
   } else if (passwordValue.length < 8) {
-    passwordError.value = "Password must be at least 8 characters long and contain at least one uppercase letter and one digit.";
+    passwordError.value =
+      "Password must be at least 8 characters long and contain at least one uppercase letter and one digit.";
     isError.value = true;
   } else {
     passwordError.value = "";
@@ -74,12 +80,16 @@ const checkPassword = () => {
 const checkInputs = () => {
   checkEmail();
   checkPassword();
+  if (!isError.value) {
+    submit();
+  }
 };
-
-
 </script>
 <style lang="scss">
 @import "../styles/common/account.scss";
 @import "../styles/common/buttons.scss";
-
+.main {
+  padding: 0;
+  text-decoration: none;
+}
 </style>

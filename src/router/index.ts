@@ -1,11 +1,26 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import RegistrationView from '../views/RegistrationView.vue'
+import TasksView from '../views/TasksView.vue'
+import TaskItem from '../components/TaskItem.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'registration',
     component: RegistrationView
+  },
+  {
+    path: '/taskItem',
+    name: 'taskItem',
+    component: TaskItem
+  },
+  {
+    path: '/tasks',
+    name: 'tasks',
+    meta: {
+      requiresAuth: true,
+    },
+    component: TasksView
   },
   {
     path: '/login',
@@ -22,4 +37,21 @@ const router = createRouter({
   routes
 })
 
-export default router
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (isAuthenticated) {
+      console.log(111)
+      next();
+    } else {
+      next("/login"); 
+    }
+  } else {
+    next();
+    console.log(22)
+  }
+});
+
+
+export default router;

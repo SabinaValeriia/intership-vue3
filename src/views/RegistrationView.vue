@@ -23,14 +23,13 @@
           div(v-for="(option, index) in options" :key="index" @click="selectOption(index)") {{ option }}
         .error-message(v-if="roleError") {{ roleError }}
       button.main.log-in(type="submit")#submit Sign up
-      //- a(href="#" onclick="signOut();") Sign out
       p Already have an account? 
-        button.sign-up Log in
+        router-link.sign-up(to="/login") Log in
   img.account--logo(src="../assets/img/academy-logo.svg")
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 const options = ref(["Admin", "User"]);
 const selectedOptionIndex = ref(-1);
@@ -62,7 +61,9 @@ const nameError = ref("");
 const isError = ref(false);
 const isEmail = (email: string): boolean => {
   //eslint-disable-next-line
-  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /* eslint-disable */
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   return emailRegex.test(email);
 };
@@ -126,6 +127,10 @@ watch(role, () => {
   checkRole();
 });
 
+onMounted(() => {
+  localStorage.removeItem("isAuthenticated");
+});
+
 const checkRole = () => {
   const roleValue = role.value.trim();
   if (roleValue === "" || roleValue === "Select") {
@@ -147,4 +152,14 @@ const checkInputs = () => {
 <style lang="scss">
 @import "../styles/common/account.scss";
 @import "../styles/common/buttons.scss";
+@import "../styles/core/colors.scss";
+.sign-up {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: right;
+  color: $grey;
+}
 </style>
