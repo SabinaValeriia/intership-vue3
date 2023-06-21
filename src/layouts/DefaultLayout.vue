@@ -1,27 +1,23 @@
 <template lang="pug">
-.side-bar
-    ul.tabs(:class="{ active: hide }")
-        li.tab(:class="{ active: currentTab === 1 }")
-            img(src="../assets/img/tasks.png")
-            a(href="#tab1" @click="showTabContent(1)") Задачі
-        li.tab(:class="{ active: currentTab === 2 }")
-            img(src="../assets/img/windows.svg")
-            a(href="#tab2" @click="showTabContent(2)") Компоненти
-        li.tab(:class="{ active: currentTab === 3 }")
-            img(src="../assets/img/board.svg")
-            a(href="#tab3" @click="showTabContent(3)") Дошка KANBAN
-    button.close(@click="hideBar" :class="{ active: hide }")
-    .tab-content(:class="{ active: hide }")
-      .tab-item(v-show="currentTab === 1" id="tab1-content" :class="{ active: hide }")
-        | Content for Tab 1
-      .tab-item(v-show="currentTab === 2" id="tab2-content" :class="{ active: hide }")
-        | Content for Tab 2
-      .tab-item(v-show="currentTab === 3" id="tab3-content" :class="{ active: hide }")
-        TaskItem
+header-component
+.display
+    .side-bar
+        ul.tabs(:class="{ active: hide }")
+            li.tab(:class="{ active: currentTab === 1 }")
+                img(src="../assets/img/tasks.png")
+                router-link(to="/task") Задачі
+            li.tab(:class="{ active: currentTab === 2 }")
+                img(src="../assets/img/windows.svg")
+                router-link(to="/task") Компоненти
+            li.tab(:class="{ active: currentTab === 3 }")
+                img(src="../assets/img/board.svg")
+                router-link(to=`/tasksItem/${taskId}`) Дошка KANBAN 
+        button.close(@click="hideBar" :class="{ active: hide }")
+    router-view
 </template>
 
 <script lang="ts" setup>
-import TaskItem from "@/components/TaskItem.vue";
+import HeaderComponent from "@/components/HeaderComponent.vue"
 import { ref } from "vue";
 const currentTab = ref(1);
 const hide = ref(false);
@@ -38,15 +34,37 @@ const hideBar = () => {
 };
 </script>
 
-<style lang="scss" scoped>
-@import "../styles/core/global.scss";
+<style lang="scss">
+@import "../styles/core/colors";
+body {
+    margin: 0;
+}
+.tablet {
+    display: block;
+    &--block{
+        display: flex;
+    }
+}
+.mobile{
+    display: none;
+}
+.display{
+    display: flex;
+}
 .side-bar {
   display: flex;
+  background: url("../assets/img/bg-tablet.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
   .tab-item {
     margin-left: 30px;
   }
-  .tab-content.active {
-    transform: translate(-210px, 10px);
+  .tab-content {
+    &.active {
+      transform: translate(-210px, 10px);
+    }
   }
   .close {
     height: 30px;
@@ -117,17 +135,28 @@ const hideBar = () => {
   }
 }
 @media (max-width: 768px) {
+#tab3-content{
+    display: block !important;
+}
   .side-bar {
-    .tab-content.active {
-      transform: translate(-178px, 10px);
-    }
-    .close.active {
-      transform: translate(-178px, 0px);
-    }
-    ul.active {
-      transform: translate(-178px, 0px);
-    }
+    display: none;
+  }
+  .background {
+    background: url("../assets/img/bg-tablet.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 30px;
   }
 }
-
+@media (max-width: 768px){
+    .tablet {
+    display: none;
+}
+.mobile{
+    display: block;
+}
+}
 </style>

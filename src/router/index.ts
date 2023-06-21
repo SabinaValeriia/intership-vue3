@@ -1,18 +1,16 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import RegistrationView from '../views/RegistrationView.vue'
-import TasksView from '../views/TasksView.vue'
-import TaskItem from '../components/TaskItem.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'registration',
-    component: RegistrationView
-  },
-  {
-    path: '/taskItem',
-    name: 'taskItem',
-    component: TaskItem
+    component: () => import('../layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/RegistrationView.vue'),
+      },
+    ]
   },
   {
     path: '/tasks',
@@ -20,15 +18,31 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
-    component: TasksView
+    component: () => import('../layouts/DefaultLayout.vue'),
+    children: [
+      {
+        path: '/task',
+        name: 'task',
+        component: () => import('../components/TasksList.vue'),
+      },
+      {
+        path: '/tasksItem/:id',
+        name: 'tasksItem',
+        component: () => import('../views/TaskItem.vue'),
+      },
+    ]
+
   },
   {
     path: '/login',
     name: 'login',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "login" */ '../views/LoginView.vue')
+    component: () => import('../layouts/AuthLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/LoginView.vue'),
+      },
+    ]
   }
 ]
 
