@@ -1,8 +1,8 @@
 <template lang="pug">
-main
-  router-view
+router-view
 </template>
 
 
 <style lang="scss">
+@import "./styles/core/global.scss";
 </style>

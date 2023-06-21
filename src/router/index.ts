@@ -19,12 +19,12 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
     component: () => import('../layouts/DefaultLayout.vue'),
-    // children: [
-    //   {
-    //     path: '',
-    //     component: () => import('../components/TaskItem.vue'),
-    //   },
-    // ]
+    children: [
+      {
+        path: '',
+        component: () => import('../components/TaskItem.vue'),
+      },
+    ]
 
   },
   {

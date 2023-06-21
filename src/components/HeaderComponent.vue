@@ -19,10 +19,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/common/account.scss";
-@import "../styles/common/buttons.scss";
-@import "../styles/core/global.scss";
-
+@import "../styles/core/colors";
 .header {
   height: 80px;
   padding: 0 40px;

@@ -21,7 +21,6 @@
 </template>
 
 <script lang="ts" setup>
-import SideBar from "@/components/SideBar.vue";
 import { ref } from "vue";
 const isBurgerMenuOpen = ref(false);
 
@@ -34,9 +33,7 @@ const close = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/common/account.scss";
-@import "../styles/common/buttons.scss";
-@import "../styles/core/global.scss";
+@import '../styles/core/colors';
 .burger-line {
   display: block;
   width: 20px;

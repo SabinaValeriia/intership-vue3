@@ -1,9 +1,8 @@
 <template lang="pug">
 .auth
     img.auth--logo(src="../assets/img/academy-logo.svg")
-    main 
-        .auth--block
-          router-view
+    .auth--block
+      router-view
 </template>
 
 
