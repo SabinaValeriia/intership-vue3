@@ -11,15 +11,19 @@
         .header--block
           input.search(type="search", name="", placeholder="Search")
           img.avatar(src="../assets/img/avatar.png")
+    BurgerMenu.mobile
 </template>
 
 <script lang="ts" setup>
-
+import BurgerMenu from '../components/BurgerMenu.vue'
 
 </script>
 
 <style lang="scss" scoped>
 @import "../styles/core/colors";
+.mobile {
+  display: none;
+}
 .header {
   height: 80px;
   padding: 0 40px;
@@ -73,6 +77,15 @@
     font-family: "Inter", sans-serif;
     font-size: 18px;
     line-height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile{
+    display: block;
+  }
+  .header{
+    display: none;
   }
 }
 

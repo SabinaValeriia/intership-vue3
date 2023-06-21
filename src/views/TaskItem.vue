@@ -26,6 +26,13 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
 
 <style lang="scss" scoped>
 .background {
+  background: url("../assets/img/bg-tablet.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: max-content;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 30px;
   h1 {
     text-align: left;
     font-family: "Inter", sans-serif;
@@ -85,11 +92,6 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
     display: block;
   }
   .background {
-    background: url("../assets/img/bg-tablet.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: max-content;
-    padding-bottom: 30px;
     .tasks-item {
       .block {
         width: 100%;

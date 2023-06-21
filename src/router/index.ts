@@ -21,8 +21,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../layouts/DefaultLayout.vue'),
     children: [
       {
-        path: '',
-        component: () => import('../components/TaskItem.vue'),
+        path: '/task',
+        name: 'task',
+        component: () => import('../components/TasksList.vue'),
+      },
+      {
+        path: '/tasksItem/:id',
+        name: 'tasksItem',
+        component: () => import('../views/TaskItem.vue'),
       },
     ]
 

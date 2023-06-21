@@ -1,35 +1,23 @@
 <template lang="pug">
-.tablet
-    header-component
-    //- .tablet--block
+header-component
+.display
     .side-bar
         ul.tabs(:class="{ active: hide }")
             li.tab(:class="{ active: currentTab === 1 }")
                 img(src="../assets/img/tasks.png")
-                a(href="#tab1" @click="showTabContent(1)") Задачі
+                router-link(to="/task") Задачі
             li.tab(:class="{ active: currentTab === 2 }")
                 img(src="../assets/img/windows.svg")
-                a(href="#tab2" @click="showTabContent(2)") Компоненти
+                router-link(to="/task") Компоненти
             li.tab(:class="{ active: currentTab === 3 }")
                 img(src="../assets/img/board.svg")
-                a(href="#tab3" @click="showTabContent(3)") Дошка KANBAN
+                router-link(to=`/tasksItem/${taskId}`) Дошка KANBAN 
         button.close(@click="hideBar" :class="{ active: hide }")
-        .tab-content(:class="{ active: hide }")
-        .tab-item(v-show="currentTab === 1" id="tab1-content" :class="{ active: hide }")
-            | Content for Tab 1
-        .tab-item(v-show="currentTab === 2" id="tab2-content" :class="{ active: hide }")
-            | Content for Tab 2
-        .tab-item(v-show="currentTab === 3" id="tab3-content" :class="{ active: hide }")
-            router-view
-.mobile
-    burger-menu
     router-view
 </template>
 
 <script lang="ts" setup>
 import HeaderComponent from "@/components/HeaderComponent.vue"
-import BurgerMenu from "@/components/BurgerMenu.vue"
-import TaskItem from "@/components/TaskItem.vue";
 import { ref } from "vue";
 const currentTab = ref(1);
 const hide = ref(false);
@@ -60,13 +48,15 @@ body {
 .mobile{
     display: none;
 }
+.display{
+    display: flex;
+}
 .side-bar {
   display: flex;
   background: url("../assets/img/bg-tablet.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  width: 100%;
   margin: 0;
   .tab-item {
     margin-left: 30px;
@@ -145,6 +135,9 @@ body {
   }
 }
 @media (max-width: 768px) {
+#tab3-content{
+    display: block !important;
+}
   .side-bar {
     display: none;
   }
