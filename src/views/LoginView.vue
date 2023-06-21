@@ -16,13 +16,11 @@
       router-link.main.log-in(to="/tasks" type="submit" @click="submit")#submit Log in
       p.login--distance New user? 
         button.sign-up Sign up
-    img.account--logo(src="../assets/img/academy-logo.svg")
 </template>
 
 <script setup lang="ts">
 import router from "@/router";
 import { ref } from "vue";
-
 const email = ref("");
 const password = ref("");
 const emailError = ref("");

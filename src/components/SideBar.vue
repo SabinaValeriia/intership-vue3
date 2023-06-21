@@ -18,6 +18,7 @@
         | Content for Tab 2
       .tab-item(v-show="currentTab === 3" id="tab3-content" :class="{ active: hide }")
         TaskItem
+TaskItem.background    
 </template>
 
 <script lang="ts" setup>
@@ -42,11 +43,19 @@ const hideBar = () => {
 @import "../styles/core/global.scss";
 .side-bar {
   display: flex;
+  background: url("../assets/img/bg-tablet.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  margin: 0;
   .tab-item {
     margin-left: 30px;
   }
-  .tab-content.active {
-    transform: translate(-210px, 10px);
+  .tab-content {
+    &.active {
+      transform: translate(-210px, 10px);
+    }
   }
   .close {
     height: 30px;
@@ -118,16 +127,16 @@ const hideBar = () => {
 }
 @media (max-width: 768px) {
   .side-bar {
-    .tab-content.active {
-      transform: translate(-178px, 10px);
-    }
-    .close.active {
-      transform: translate(-178px, 0px);
-    }
-    ul.active {
-      transform: translate(-178px, 0px);
-    }
+    display: none;
+  }
+  .background {
+    background: url("../assets/img/bg-tablet.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 30px;
   }
 }
-
 </style>

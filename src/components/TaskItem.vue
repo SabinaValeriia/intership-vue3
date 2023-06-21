@@ -1,6 +1,5 @@
 <template lang="pug">
 .background
-    header-component.hide
     h1 Дошка KANBAN
     .tasks-item 
         .block 
@@ -32,7 +31,8 @@ import HeaderComponent from "@/components/HeaderComponent.vue";
     font-family: "Inter", sans-serif;
     font-size: 28px;
     line-height: 34px;
-    margin-left: 15px;
+    margin: 0 15px 0 15px;
+    padding: 15px 0;
   }
   .tasks-item {
     display: flex;

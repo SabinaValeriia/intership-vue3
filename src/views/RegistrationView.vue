@@ -1,10 +1,10 @@
 <template lang="pug">
+router-view
 .account--bg
   .account--block
     form.account--block-form#form(@submit.prevent="checkInputs")
       img.account--logo-mobile(src="../assets/img/academy-logo-tablet.svg")
       h1 Sign up
-      //- .g-signin2(data-onsuccess="onSignIn")
       button.main.google Sign up with Google
       h2 Or continue with
       label(for="email") Email Address
@@ -25,7 +25,6 @@
       button.main.log-in(type="submit")#submit Sign up
       p Already have an account? 
         router-link.sign-up(to="/login") Log in
-  img.account--logo(src="../assets/img/academy-logo.svg")
 </template>
 
 <script setup lang="ts">
