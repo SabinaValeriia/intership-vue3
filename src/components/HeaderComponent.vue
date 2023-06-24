@@ -7,20 +7,85 @@
             li Ваша робота
             li Проекти
             li Фільтри
-            button Cтворити
+            button(@click="openPopup") Cтворити
         .header--block
           input.search(type="search", name="", placeholder="Search")
           img.avatar(src="../assets/img/avatar.png")
-    BurgerMenu.mobile
+    burger-menu.mobile
+.background(v-if="showPopup || showPopupEdit")
+    popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" @close-popup-edit="closeEdit")
 </template>
 
 <script lang="ts" setup>
-import BurgerMenu from '../components/BurgerMenu.vue'
+import {
+  getCurrentInstance,
+  defineEmits,
+  defineProps,
+  ref,
+  onMounted,
+} from "vue";
+import BurgerMenu from "../components/BurgerMenu.vue";
+import PopupComponent from "../components/PopupComponent.vue";
+import { Tasks } from "@/types/interfaceTask";
+const showPopup = ref(false);
+const { emit } = getCurrentInstance();
+const props = defineProps({
+  indexEdit: {
+    type: Number,
+  },
+  showPopupEdit: {
+    type: Boolean,
+  },
+  closeShowPopupEdit: {
+    type: Boolean,
+  },
+});
+const openPopup = () => {
+  showPopup.value = true;
+};
 
+const closePopup = () => {
+  showPopup.value = false;
+};
+const addNewTask = (newTask: Array<Tasks>) => {
+  emit("new-task", newTask);
+  closePopup();
+};
+const editTasks = (editTask: Array<Tasks>) => {
+  emit("edit-task", editTask);
+};
+
+const handleTaskCreated = (showPopups: boolean) => {
+  console.log("Task created:", showPopups);
+  showPopup.value = showPopups;
+};
+const handleTaskEdit = (showEdit: any) => {
+  showPopup.value = showEdit;
+};
+
+defineEmits(["new-task", "edit-task"]);
 </script>
 
 <style lang="scss" scoped>
 @import "../styles/core/colors";
+
+.background {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  &::v-deep(.popup-component) {
+    position: absolute;
+    border-color: initial;
+    background-color: initial;
+  }
+}
 .mobile {
   display: none;
 }
@@ -81,12 +146,11 @@ import BurgerMenu from '../components/BurgerMenu.vue'
 }
 
 @media (max-width: 768px) {
-  .mobile{
+  .mobile {
     display: block;
   }
-  .header{
+  .header {
     display: none;
   }
 }
-
 </style>
