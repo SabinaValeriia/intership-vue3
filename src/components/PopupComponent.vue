@@ -1,14 +1,14 @@
 <template lang="pug">
 .popup
-          h1 {{ indexEdit.length > 0 ? 'Редагувати таску' : 'Додати нову таску' }}
+          h1 {{ indexEdit ? 'Редагувати таску' : 'Додати нову таску' }}
           form
           input(type="name" placeholder="Назва таски" v-model="taskNameInput")
           input.desc(type="text" placeholder="Опис таски" v-model="taskDescriptionInput")
-          button.add(@click="handleTaskAction") {{  indexEdit.length > 0 ? 'Зберегти' : 'Додати' }}
+          button.add(@click="handleTaskAction") {{  iindexEdit > 0 ? 'Зберегти' : 'Додати' }}
           button.close(@click="closePopup") 
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import {
   ref,
   defineEmits,
@@ -22,25 +22,27 @@ const { emit } = getCurrentInstance();
 
 const props = defineProps({
   indexEdit: {
-    type: Array,
+    type: Number,
     required: true,
   },
 });
-
+const indexEdit = computed(() => {
+  return props.indexEdit > 0;
+});
 const closePopup = () => {
   emit("close");
 };
 const taskDescriptionInput = ref("");
 const taskNameInput = ref("");
 const addTask = () => {
-  const newTask = {
+  const newTask : Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
   };
   emit("new-task", newTask);
 };
 const editTask = (index) => {
-  const editTask = {
+  const editTask: Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
   };

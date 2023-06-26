@@ -34,11 +34,10 @@ const deleteTask = (deleteItem: object) => {
     console.log(tasks.value);
   }
 };
-let indexEdit = ref(0);
-
+let indexEdit = ref(-1);
 const showPopupEdit = ref(false);
 const closeShowPopupEdit = ref(false);
-const editTask = (editTask: object) => {
+const editTask = (editTask: Tasks) => {
   if (indexEdit.value.length > 0) {
     indexEdit.value[0] = editTask;
   }

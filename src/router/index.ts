@@ -1,11 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { ref } from 'vue';
 
-export const tasks = ref([]);
-
-// Perform any necessary operations to populate the tasks ref
-
-
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -31,9 +26,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/task',
         name: 'task',
         component: () => import('../views/TasksList.vue'),
-        // props: { tasks: tasks.value }
-        props: () => ({ tasks: tasks.value })
-        // props: route => ({ tasks: tasks.value })
       },
       {
         path: '/tasksItem/:id',
