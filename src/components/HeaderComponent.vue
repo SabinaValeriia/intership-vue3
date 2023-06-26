@@ -13,22 +13,18 @@
           img.avatar(src="../assets/img/avatar.png")
     burger-menu.mobile
 .background(v-if="showPopup || showPopupEdit")
-    popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" @close-popup-edit="closeEdit")
+    popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" :indexTap="indexTap" @close-popup-edit="closeEdit")
 </template>
 
 <script lang="ts" setup>
 import {
-  getCurrentInstance,
-  defineEmits,
-  defineProps,
-  ref,
-  onMounted,
+  ref, defineEmits, defineProps
 } from "vue";
 import BurgerMenu from "../components/BurgerMenu.vue";
 import PopupComponent from "../components/PopupComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
 const showPopup = ref(false);
-const { emit } = getCurrentInstance();
+const emit  = defineEmits(["new-task", "edit-task"]);
 const props = defineProps({
   indexEdit: {
     type: Number,
@@ -39,6 +35,9 @@ const props = defineProps({
   closeShowPopupEdit: {
     type: Boolean,
   },
+  indexTap: {
+    type: Number
+  }
 });
 const openPopup = () => {
   showPopup.value = true;
@@ -63,7 +62,6 @@ const handleTaskEdit = (showEdit: any) => {
   showPopup.value = showEdit;
 };
 
-defineEmits(["new-task", "edit-task"]);
 </script>
 
 <style lang="scss" scoped>

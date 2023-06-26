@@ -1,33 +1,45 @@
 <template lang="pug">
 .popup
-          h1 {{ indexEdit ? 'Редагувати таску' : 'Додати нову таску' }}
+          h1 {{ showEdit ? 'Редагувати таску' : 'Додати нову таску' }}
           form
-          input(type="name" placeholder="Назва таски" v-model="taskNameInput")
-          input.desc(type="text" placeholder="Опис таски" v-model="taskDescriptionInput")
-          button.add(@click="handleTaskAction") {{  iindexEdit > 0 ? 'Зберегти' : 'Додати' }}
+            input(
+              data-type="name"
+              placeholder="Назва таски"
+              :value="showEdit ? indexEdit[indexTap].name : taskNameInput"
+              @input="taskNameInput = $event.target.value")
+            input.desc(
+              data-type="text"
+              placeholder="Опис таскии"
+              :value="showEdit ? indexEdit[indexTap].description : taskDescriptionInput"
+              @input="taskDescriptionInput = $event.target.value")
+          button.add(@click="handleTaskAction") {{  showEdit ? 'Зберегти' : 'Додати' }}
           button.close(@click="closePopup") 
 </template>
 
 <script lang="ts" setup>
-import {
-  ref,
-  defineEmits,
-  getCurrentInstance,
-  defineProps,
-  computed,
-} from "vue";
-import { Tasks } from "../types/interfaceTask.ts";
+import { Tasks } from "@/types/interfaceTask";
+import { ref, defineEmits, defineProps, computed } from "vue";
+
 const showPopups = ref(false);
-const { emit } = getCurrentInstance();
+const emit = defineEmits([
+  "close",
+  "edit-task",
+  "new-task",
+  "close-popup-edit",
+]);
 
 const props = defineProps({
   indexEdit: {
     type: Number,
     required: true,
   },
+  indexTap: {
+    type: Number,
+  },
 });
-const indexEdit = computed(() => {
-  return props.indexEdit > 0;
+const showEdit = computed(() => {
+  console.log(props.indexTap)
+  return props.indexEdit.length > 0;
 });
 const closePopup = () => {
   emit("close");
@@ -35,13 +47,13 @@ const closePopup = () => {
 const taskDescriptionInput = ref("");
 const taskNameInput = ref("");
 const addTask = () => {
-  const newTask : Tasks = {
+  const newTask: Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
   };
   emit("new-task", newTask);
 };
-const editTask = (index) => {
+const editTask = () => {
   const editTask: Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
@@ -57,8 +69,6 @@ const handleTaskAction = () => {
     addTask();
   }
 };
-
-defineEmits(["close", "edit-task", "new-task", "close-popup-edit"]);
 </script>
 
 <style lang="scss" scoped>

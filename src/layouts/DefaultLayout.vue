@@ -1,5 +1,5 @@
 <template lang="pug">
-header-component(@new-task="addNewTask" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
+header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
 .display
     .side-bar
         ul.tabs(:class="{ active: hide }")
@@ -13,7 +13,7 @@ header-component(@new-task="addNewTask" :showPopupEdit="showPopupEdit" :closeSho
                 img(src="../assets/img/board.svg")
                 router-link(to=`/tasksItem/${taskId}`) Дошка KANBAN 
         button.close(@click="hideBar" :class="{ active: hide }")
-    router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks")
+    router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks" @task-edit-index="taskEditIndex")
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +31,6 @@ const deleteTask = (deleteItem: object) => {
   const index = tasks.value.findIndex((task) => task === deleteItem);
   if (index !== -1) {
     tasks.value.splice(index, 1);
-    console.log(tasks.value);
   }
 };
 let indexEdit = ref(-1);
@@ -49,6 +48,10 @@ const editTasks = (indexes: number) => {
   indexEdit.value = indexes;
   showPopupEdit.value = true;
 };
+const indexTap = ref(-1);
+const taskEditIndex = (index: number) => {
+  indexTap.value = index;
+}
 
 const showTabContent = (tab: number) => {
   currentTab.value = tab;

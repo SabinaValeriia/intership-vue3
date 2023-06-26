@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import Tasks from "../types/interfaceTask";
-import { defineProps, defineEmits, getCurrentInstance, ref } from "vue";
+import { Tasks } from "../types/interfaceTask";
+import { defineProps, defineEmits, ref } from "vue";
 const props = defineProps({
   tasks: {
     type: Array as () => Tasks[],
@@ -33,7 +33,7 @@ const props = defineProps({
   },
 });
 
-const { emit } = getCurrentInstance();
+const emit = defineEmits(["task-edit", "task-delete", "task-edit-index"]);
 
 const showEdit = ref(false);
 
@@ -43,28 +43,28 @@ const close = () => {
   confirmDelete.value = false;
 };
 
-let deleteIndex = null;
+const deleteIndex = ref(-1);
 
 const confirmDeleteTask = (index: number) => {
   confirmDelete.value = true;
-  deleteIndex = index;
+  deleteIndex.value = index;
 };
 
 const deleteTask = () => {
-  if (deleteIndex !== null) {
-    let deleteItem = props.tasks[deleteIndex];
+  if (deleteIndex.value !== -1) {
+    let deleteItem = props.tasks[deleteIndex.value];
     emit("task-delete", deleteItem);
-    deleteIndex = null;
+    deleteIndex.value = -1;
   }
   close();
 };
 
+
 const editTask = (index: number) => {
   const indexes = props.tasks;
   emit("task-edit", indexes);
+  emit("task-edit-index", index);
 };
-
-defineEmits(["task-edit", "task-delete"]);
 </script>
 
 <style lang="scss" scoped>
