@@ -5,13 +5,13 @@ header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="sho
         ul.tabs(:class="{ active: hide }")
             li.tab(:class="{ active: currentTab === 1 }")
                 img(src="../assets/img/tasks.png")
-                router-link(to="/task") Задачі
-            li.tab(:class="{ active: currentTab === 2 }")
-                img(src="../assets/img/windows.svg")
-                router-link(to="/task") Компоненти
+                router-link(to="/projects/task") Задачі
             li.tab(:class="{ active: currentTab === 3 }")
                 img(src="../assets/img/board.svg")
-                router-link(to=`/tasksItem/${taskId}`) Дошка KANBAN 
+                router-link(to=`/projects/tasksItem/${taskId}`) Дошка KANBAN 
+            li.tab(:class="{ active: currentTab === 3 }")
+                img(src="../assets/img/board.svg")
+                router-link(to=`/projects/archive`) Архів
         button.close(@click="hideBar" :class="{ active: hide }")
     router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks" @task-edit-index="taskEditIndex")
 </template>

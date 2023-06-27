@@ -14,6 +14,21 @@ const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
+  // {
+  //   path: '/profile',
+  //   name: 'profile',
+  //   meta: {
+  //     requiresAuth: true,
+  //   },
+  //   component: () => import('../layouts/DefaultLayout.vue'),
+  //   children: [
+  //     {
+  //       path: '/profile',
+  //       name: 'profile',
+  //       component: () => import('../views/ProfileView.vue'),
+  //     },
+  //   ]
+  // },
   {
     path: '/tasks',
     name: 'tasks',
@@ -28,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/TasksList.vue'),
       },
       {
-        path: '/tasksItem/:id',
+        path: '/projects/tasksItem/:id',
         name: 'tasksItem',
         component: () => import('../views/TaskItem.vue'),
       },
@@ -41,6 +56,21 @@ const routes: Array<RouteRecordRaw> = [
         path: '/projects/issues/:id',
         name: 'projectsItems',
         component: () => import('../views/ProjectsItems.vue'),
+      },
+      {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('../views/ProfileView.vue'),
+      },
+      {
+        path: '/your-work',
+        name: 'your-work',
+        component: () => import('../views/YourWork.vue'),
+      },
+      {
+        path: '/projects/archive',
+        name: 'archive',
+        component: () => import('../views/ArchiveView.vue'),
       },
     ]
 

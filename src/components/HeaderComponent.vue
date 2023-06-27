@@ -4,7 +4,8 @@
         .header--block
           img(src="../assets/img/academy-logo.svg")
           ul
-            li Ваша робота
+            li 
+              router-link(to=`/your-work`) Ваша робота
             li 
               router-link(to=`/projects/issues`) Проекти
             li 
@@ -12,7 +13,8 @@
             button(@click="openPopup") Cтворити
         .header--block
           input.search(type="search", name="", placeholder="Search")
-          img.avatar(src="../assets/img/avatar.png")
+          router-link(to="/profile")
+            img.avatar(src="../assets/img/avatar.png")
     burger-menu.mobile
 .background(v-if="showPopup || showPopupEdit")
     popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" :indexTap="indexTap" @close-popup-edit="closeEdit")
