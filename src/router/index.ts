@@ -32,6 +32,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'tasksItem',
         component: () => import('../views/TaskItem.vue'),
       },
+      {
+        path: '/projects/issues',
+        name: 'projects',
+        component: () => import('../views/ProjectsView.vue'),
+      },
+      {
+        path: '/projects/issues/:id',
+        name: 'projectsItems',
+        component: () => import('../views/ProjectsItems.vue'),
+      },
     ]
 
   },
@@ -45,7 +55,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/LoginView.vue'),
       },
     ]
-  }
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: () => import('../views/ErrorView.vue'),
+    meta: {
+      title: 'Сторінку не знайдено',
+    },
+  },
 ]
 
 const router = createRouter({
@@ -58,14 +76,12 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isAuthenticated) {
-      console.log(111)
       next();
     } else {
       next("/login"); 
     }
   } else {
     next();
-    console.log(22)
   }
 });
 

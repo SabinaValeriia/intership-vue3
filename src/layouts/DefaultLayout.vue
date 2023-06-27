@@ -1,7 +1,7 @@
 <template lang="pug">
 header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
 .display
-    .side-bar
+    .side-bar(v-if="showSidebar")
         ul.tabs(:class="{ active: hide }")
             li.tab(:class="{ active: currentTab === 1 }")
                 img(src="../assets/img/tasks.png")
@@ -19,7 +19,8 @@ header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="sho
 <script lang="ts" setup>
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 const currentTab = ref(1);
 const hide = ref(false);
 const tasks = ref<Tasks[]>([]);
@@ -63,6 +64,12 @@ const hideBar = () => {
     hide.value = false;
   }
 };
+
+const route = useRoute();
+const showSidebar = ref(false);
+watch(route, () => {
+  showSidebar.value = route.path.includes('projects');
+});
 </script>
 
 <style lang="scss">
@@ -84,10 +91,6 @@ body {
 }
 .side-bar {
   display: flex;
-  background: url("../assets/img/bg-tablet.png");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
   margin: 0;
   .tab-item {
     margin-left: 30px;

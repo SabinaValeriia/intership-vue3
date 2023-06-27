@@ -5,8 +5,10 @@
           img(src="../assets/img/academy-logo.svg")
           ul
             li Ваша робота
-            li Проекти
-            li Фільтри
+            li 
+              router-link(to=`/projects/issues`) Проекти
+            li 
+              router-link(to="/task") Задачі
             button(@click="openPopup") Cтворити
         .header--block
           input.search(type="search", name="", placeholder="Search")
@@ -126,6 +128,10 @@ const handleTaskEdit = (showEdit: any) => {
       font-family: "Inter", sans-serif;
       font-size: 18px;
       line-height: 20px;
+      a {
+        text-decoration: none;
+        color: black;
+      }
     }
   }
   img {
