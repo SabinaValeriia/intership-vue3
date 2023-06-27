@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { ref } from 'vue';
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -23,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/task',
         name: 'task',
-        component: () => import('../components/TasksList.vue'),
+        component: () => import('../views/TasksList.vue'),
       },
       {
         path: '/tasksItem/:id',
