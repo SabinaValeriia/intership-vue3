@@ -1,28 +1,29 @@
 <template lang="pug">
-.projects
-    h1 Проєкти
-        .projects--block(v-for="project in projects")
-            .projects--block-item
-                router-link(:to="`/projects/${project.key}/issues`") {{ project.name }}
+.projects-tasks
+    h1 Задачі
+    div(v-for="task in projectsTasks")
+        router-link(:to="`/projects/${task.key}/issues/${task.id}`") {{ task.name }}
 </template>
 
 <script lang="ts" setup>
 import { ref } from "vue";
 
-const projects = [
+const projectsTasks = [
   {
-    name: "Onix-time-management",
+    name: "Task1",
     key: "TIME",
+    id: 1
   },
   {
-    name: "Bracketology",
+    name: "Task2",
     key: "Brack",
+    id: 2
   },
 ];
 </script>
 
 <style lang="scss">
-.projects {
+.projects-tasks {
   background: url("../assets/img/bg-tablet.png");
   background-size: cover;
   background-repeat: no-repeat;

@@ -7,7 +7,7 @@
             li 
               router-link(to=`/your-work`) Ваша робота
             li 
-              router-link(to=`/projects/issues`) Проекти
+              router-link(to=`/projects`) Проєкти
             li 
               router-link(to="/task") Задачі
             button(@click="openPopup") Cтворити

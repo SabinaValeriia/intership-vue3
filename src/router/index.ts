@@ -14,21 +14,6 @@ const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
-  // {
-  //   path: '/profile',
-  //   name: 'profile',
-  //   meta: {
-  //     requiresAuth: true,
-  //   },
-  //   component: () => import('../layouts/DefaultLayout.vue'),
-  //   children: [
-  //     {
-  //       path: '/profile',
-  //       name: 'profile',
-  //       component: () => import('../views/ProfileView.vue'),
-  //     },
-  //   ]
-  // },
   {
     path: '/tasks',
     name: 'tasks',
@@ -48,12 +33,17 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/TaskItem.vue'),
       },
       {
-        path: '/projects/issues',
+        path: '/projects',
         name: 'projects',
         component: () => import('../views/ProjectsView.vue'),
       },
       {
-        path: '/projects/issues/:id',
+        path: '/projects/:key/issues',
+        name: 'projectsTasks',
+        component: () => import('../views/ProjectsTasks.vue'),
+      },
+      {
+        path: '/projects/:key/issues/:id',
         name: 'projectsItems',
         component: () => import('../views/ProjectsItems.vue'),
       },
