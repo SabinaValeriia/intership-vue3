@@ -3,7 +3,7 @@
     h1 Проєкти
         .projects--block(v-for="project in projects")
             .projects--block-item
-                router-link(:to="`/projects/${project.key}/issues`") {{ project.name }}
+                router-link(:to="{ name: 'projectsTasks', params: { key: project.key }}") {{ project.name }}
 </template>
 
 <script lang="ts" setup>

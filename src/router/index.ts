@@ -1,95 +1,105 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { ref } from 'vue';
-
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { ref } from "vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: 'registration',
-    component: () => import('../layouts/AuthLayout.vue'),
+    path: "/",
+    name: "registration",
+    component: () => import("../layouts/AuthLayout.vue"),
     children: [
       {
-        path: '',
-        component: () => import('../views/RegistrationView.vue'),
+        path: "",
+        component: () => import("../views/RegistrationView.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/tasks',
-    name: 'tasks',
+    path: '/dashboard/projects/:key/issue',
+    name: 'projectsTasks',
     meta: {
       requiresAuth: true,
     },
-    component: () => import('../layouts/DefaultLayout.vue'),
+    component: () => import('../layouts/ProjectsLayout.vue'),
     children: [
       {
-        path: '/task',
-        name: 'task',
-        component: () => import('../views/TasksList.vue'),
-      },
-      {
-        path: '/projects/tasksItem/:id',
-        name: 'tasksItem',
-        component: () => import('../views/TaskItem.vue'),
-      },
-      {
-        path: '/projects',
-        name: 'projects',
-        component: () => import('../views/ProjectsView.vue'),
-      },
-      {
-        path: '/projects/:key/issues',
-        name: 'projectsTasks',
-        component: () => import('../views/ProjectsTasks.vue'),
-      },
-      {
-        path: '/projects/:key/issues/:id',
-        name: 'projectsItems',
-        component: () => import('../views/ProjectsItems.vue'),
-      },
-      {
-        path: '/profile',
-        name: 'profile',
-        component: () => import('../views/ProfileView.vue'),
-      },
-      {
-        path: '/your-work',
-        name: 'your-work',
-        component: () => import('../views/YourWork.vue'),
-      },
-      {
-        path: '/projects/archive',
-        name: 'archive',
-        component: () => import('../views/ArchiveView.vue'),
-      },
+          path: '',
+          component: () => import('../views/ProjectsTasks.vue'),
+        },
+        {
+            path: ':id',
+            name: 'projectsItems',
+            component: () => import('../views/ProjectsItems.vue'),
+          },
+          {
+            path: "archive",
+            name: "archive",
+            component: () => import("../views/ArchiveView.vue"),
+          },
+          {
+            path: "canban",
+            name: "canban",
+            component: () => import("../views/CanbanView.vue"),
+          },
     ]
-
-  },
+    },
   {
-    path: '/login',
-    name: 'login',
-    component: () => import('../layouts/AuthLayout.vue'),
+    path: "/login",
+    name: "login",
+    component: () => import("../layouts/AuthLayout.vue"),
     children: [
       {
-        path: '',
-        component: () => import('../views/LoginView.vue'),
+        path: "",
+        component: () => import("../views/LoginView.vue"),
       },
-    ]
+    ],
   },
   {
-    path: '/:catchAll(.*)',
-    name: 'NotFound',
-    component: () => import('../views/ErrorView.vue'),
+    path: "/dashboard",
+    name: "dashboard",
     meta: {
-      title: 'Сторінку не знайдено',
+      requiresAuth: true,
+    },
+    component: () => import("../layouts/DefaultLayout.vue"),
+    children: [
+      {
+        path: "projects",
+        name: "projects",
+        component: () => import("../views/ProjectsView.vue"),
+      },
+      {
+        path: "profile",
+        name: "profile",
+        component: () => import("../views/ProfileView.vue"),
+        meta: {
+          background: "white",
+        },
+      },
+      {
+        path: "your-work",
+        name: "your-work",
+        component: () => import("../views/YourWork.vue"),
+      },
+      {
+        path: "team",
+        name: "team",
+        component: () => import("../views/TeamView.vue"),
+      },
+    ],
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: () => import("../views/ErrorView.vue"),
+    meta: {
+      title: "Сторінку не знайдено",
     },
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -98,12 +108,11 @@ router.beforeEach((to, from, next) => {
     if (isAuthenticated) {
       next();
     } else {
-      next("/login"); 
+      next("/login");
     }
   } else {
     next();
   }
 });
-
 
 export default router;

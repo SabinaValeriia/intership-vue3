@@ -1,19 +1,19 @@
 <template lang="pug">
 .container
-    .header
+    .header(:style="{ background: $route.meta.background + ' !important' }")
         .header--block
           img(src="../assets/img/academy-logo.svg")
           ul
             li 
-              router-link(to=`/your-work`) Ваша робота
+              router-link(:to="{ name: 'your-work' }") Ваша робота
             li 
-              router-link(to=`/projects`) Проєкти
+              router-link(:to="{ name: 'projects' }") Проєкти
             li 
-              router-link(to="/task") Задачі
+              router-link(:to="{ name: 'team' }") Команда
             button(@click="openPopup") Cтворити
         .header--block
           input.search(type="search", name="", placeholder="Search")
-          router-link(to="/profile")
+          router-link(:to="{ name: 'profile' }")
             img.avatar(src="../assets/img/avatar.png")
     burger-menu.mobile
 .background(v-if="showPopup || showPopupEdit")

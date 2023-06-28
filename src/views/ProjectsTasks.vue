@@ -2,7 +2,7 @@
 .projects-tasks
     h1 Задачі
     div(v-for="task in projectsTasks")
-        router-link(:to="`/projects/${task.key}/issues/${task.id}`") {{ task.name }}
+        router-link(:to="{ name: 'projectsItems', params: { key: task.key, id: task.id }}") {{ task.name }}
 </template>
 
 <script lang="ts" setup>
