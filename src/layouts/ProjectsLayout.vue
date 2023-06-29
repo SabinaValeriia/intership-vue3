@@ -1,5 +1,4 @@
 <template lang="pug">
-header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
 .display
         .side-bar
             ul.tabs(:class="{ active: hide }")
@@ -15,60 +14,6 @@ header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="sho
             button.close(@click="hideBar" :class="{ active: hide }")
         router-view
 </template>
-
-<script lang="ts" setup>
-import HeaderComponent from "@/components/HeaderComponent.vue";
-import { Tasks } from "@/types/interfaceTask";
-import { ref, watch } from "vue";
-import { useRoute } from "vue-router";
-const currentTab = ref(1);
-const hide = ref(false);
-const tasks = ref<Tasks[]>([]);
-
-const addNewTask = (newTask: any) => {
-  tasks.value.push(newTask);
-};
-const deleteTask = (deleteItem: object) => {
-  const index = tasks.value.findIndex((task) => task === deleteItem);
-  if (index !== -1) {
-    tasks.value.splice(index, 1);
-  }
-};
-let indexEdit = ref(-1);
-const showPopupEdit = ref(false);
-const closeShowPopupEdit = ref(false);
-const editTask = (editTask: Tasks) => {
-  if (indexEdit.value.length > 0) {
-    indexEdit.value[0] = editTask;
-  }
-  showPopupEdit.value = false;
-  closeShowPopupEdit.value = false;
-};
-
-const editTasks = (indexes: number) => {
-  indexEdit.value = indexes;
-  showPopupEdit.value = true;
-};
-const indexTap = ref(-1);
-const taskEditIndex = (index: number) => {
-  indexTap.value = index;
-};
-
-const showTabContent = (tab: number) => {
-  currentTab.value = tab;
-};
-const hideBar = () => {
-  if (!hide.value) {
-    hide.value = true;
-  } else {
-    hide.value = false;
-  }
-};
-
-const route = useRoute();
-const showSidebar = ref(false);
-
-</script>
 
 <style lang="scss">
 @import "../styles/core/colors";

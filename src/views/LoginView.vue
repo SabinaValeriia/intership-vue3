@@ -15,7 +15,7 @@
       button.forgot Forgot your password?
       router-link.main.log-in(to="/dashboard/your-work" type="submit" @click="submit")#submit Log in
       p.login--distance New user? 
-        button.sign-up Sign up
+        router-link.sign-up(to="/auth/registration")  Sign up
 </template>
 
 <script setup lang="ts">

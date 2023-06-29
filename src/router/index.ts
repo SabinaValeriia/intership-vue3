@@ -3,32 +3,55 @@ import { ref } from "vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "registration",
+    path: "/auth",
+    name: "Auth",
     component: () => import("../layouts/AuthLayout.vue"),
+    redirect: "/auth/login",
     children: [
       {
-        path: "",
+        path: "login",
+        name: "Login",
+        component: () => import("../views/LoginView.vue"),
+      },
+      {
+        path: "registration",
+        name: "Registration",
         component: () => import("../views/RegistrationView.vue"),
       },
     ],
   },
   {
-    path: '/dashboard/projects/:key/issue',
-    name: 'projectsTasks',
+    path: "/dashboard",
+    name: "dashboard",
+    redirect: "/dashboard/your-work",
     meta: {
       requiresAuth: true,
     },
-    component: () => import('../layouts/ProjectsLayout.vue'),
+    component: () => import("../layouts/DefaultLayout.vue"),
     children: [
       {
-          path: '',
-          component: () => import('../views/ProjectsTasks.vue'),
+        path: "projects",
+        name: "projects",
+        component: () => import("../views/ProjectsView.vue"),
+      },
+      {
+        path: "projects/:key",
+        name: "projectsKey",
+        meta: {
+          requiresAuth: true,
         },
-        {
-            path: ':id',
-            name: 'projectsItems',
-            component: () => import('../views/ProjectsItems.vue'),
+        redirect: "projects/:key/canban",
+        component: () => import("../layouts/ProjectsLayout.vue"),
+        children: [
+          {
+            path: "issues",
+            name: "projectsTasks",
+            component: () => import("../views/ProjectsTasks.vue"),
+          },
+          {
+            path: "issues/:id",
+            name: "projectsItems",
+            component: () => import("../views/ProjectsItems.vue"),
           },
           {
             path: "archive",
@@ -40,32 +63,9 @@ const routes: Array<RouteRecordRaw> = [
             name: "canban",
             component: () => import("../views/CanbanView.vue"),
           },
-    ]
-    },
-  {
-    path: "/login",
-    name: "login",
-    component: () => import("../layouts/AuthLayout.vue"),
-    children: [
-      {
-        path: "",
-        component: () => import("../views/LoginView.vue"),
+        ],
       },
-    ],
-  },
-  {
-    path: "/dashboard",
-    name: "dashboard",
-    meta: {
-      requiresAuth: true,
-    },
-    component: () => import("../layouts/DefaultLayout.vue"),
-    children: [
-      {
-        path: "projects",
-        name: "projects",
-        component: () => import("../views/ProjectsView.vue"),
-      },
+
       {
         path: "profile",
         name: "profile",
@@ -88,6 +88,10 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/:catchAll(.*)",
+   redirect: '/404'
+  },
+  {
+    path: "/404",
     name: "NotFound",
     component: () => import("../views/ErrorView.vue"),
     meta: {
