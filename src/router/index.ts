@@ -3,10 +3,10 @@ import { ref } from "vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/auth",
+    path: "/",
     name: "Auth",
     component: () => import("../layouts/AuthLayout.vue"),
-    redirect: "/auth/login",
+    redirect: "/login",
     children: [
       {
         path: "login",
@@ -40,7 +40,9 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           requiresAuth: true,
         },
-        redirect: "projects/:key/canban",
+        redirect: to => {
+          return { name: "canban", params: { key: to.params.key, } }
+        },
         component: () => import("../layouts/ProjectsLayout.vue"),
         children: [
           {
