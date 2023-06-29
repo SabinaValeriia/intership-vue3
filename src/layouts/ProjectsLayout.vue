@@ -1,40 +1,19 @@
 <template lang="pug">
-header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
-router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks" @task-edit-index="taskEditIndex")
+.display
+        .side-bar
+            ul.tabs(:class="{ active: hide }")
+                li.tab(:class="{ active: currentTab === 1 }")
+                    img(src="../assets/img/tasks.png")
+                    router-link(:to="{ name: 'projectsTasks', params: { key: $route.params.key }}") Задачі
+                li.tab(:class="{ active: currentTab === 3 }")
+                    img(src="../assets/img/board.svg")
+                    router-link(:to="{ name: 'canban'}") Дошка KANBAN 
+                li.tab(:class="{ active: currentTab === 3 }")
+                    img(src="../assets/img/board.svg")
+                    router-link(:to="{name: 'archive'}") Архів
+            button.close(@click="hideBar" :class="{ active: hide }")
+        router-view
 </template>
-
-<script lang="ts" setup>
-import HeaderComponent from "@/components/HeaderComponent.vue";
-import { Tasks } from "@/types/interfaceTask";
-import { ref } from "vue";
-const tasks = ref<Tasks[]>([]);
-
-
-const addNewTask = (newTask: any) => {
-  tasks.value.push(newTask);
-};
-const deleteTask = (deleteItem: object) => {
-  const index = tasks.value.findIndex((task) => task === deleteItem);
-  if (index !== -1) {
-    tasks.value.splice(index, 1);
-  }
-};
-let indexEdit = ref(-1);
-const showPopupEdit = ref(false);
-const closeShowPopupEdit = ref(false);
-const editTask = (editTask: Tasks) => {
-  if (indexEdit.value.length > 0) {
-    indexEdit.value[0] = editTask;
-  }
-  showPopupEdit.value = false;
-  closeShowPopupEdit.value = false;
-};
-
-const editTasks = (indexes: number) => {
-  indexEdit.value = indexes;
-  showPopupEdit.value = true;
-};
-</script>
 
 <style lang="scss">
 @import "../styles/core/colors";

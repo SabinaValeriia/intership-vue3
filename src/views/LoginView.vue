@@ -13,9 +13,9 @@
       input#password(:class="{ error: isError }" type="password" placeholder="Type your password" v-model.trim="password" @input="checkPassword" @blur="checkPassword")
       .error-message(v-if="passwordError") {{ passwordError }}
       button.forgot Forgot your password?
-      router-link.main.log-in(to="/tasks" type="submit" @click="submit")#submit Log in
+      router-link.main.log-in(to="/dashboard/your-work" type="submit" @click="submit")#submit Log in
       p.login--distance New user? 
-        button.sign-up Sign up
+        router-link.sign-up(to="/auth/registration")  Sign up
 </template>
 
 <script setup lang="ts">
@@ -43,7 +43,7 @@ const isPassword = (password: string): boolean => {
 
 const submit = () => {
   localStorage.setItem("isAuthenticated", "true");
-  router.push("/tasks");
+  router.push({name: 'your-work'});
 };
 
 const checkEmail = () => {

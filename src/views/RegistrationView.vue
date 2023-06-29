@@ -24,7 +24,7 @@ router-view
         .error-message(v-if="roleError") {{ roleError }}
       button.main.log-in(type="submit")#submit Sign up
       p Already have an account? 
-        router-link.sign-up(to="/login") Log in
+        router-link.sign-up(to="/auth/login") Log in
 </template>
 
 <script setup lang="ts">

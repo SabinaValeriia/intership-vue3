@@ -1,16 +1,20 @@
 <template lang="pug">
 .container
-    .header
+    .header(:style="{ background: $route.meta.background + ' !important' }")
         .header--block
           img(src="../assets/img/academy-logo.svg")
           ul
-            li Ваша робота
-            li Проекти
-            li Фільтри
+            li 
+              router-link(:to="{ name: 'your-work' }") Ваша робота
+            li 
+              router-link(:to="{ name: 'projects' }") Проєкти
+            li 
+              router-link(:to="{ name: 'team' }") Команда
             button(@click="openPopup") Cтворити
         .header--block
           input.search(type="search", name="", placeholder="Search")
-          img.avatar(src="../assets/img/avatar.png")
+          router-link(:to="{ name: 'profile' }")
+            img.avatar(src="../assets/img/avatar.png")
     burger-menu.mobile
 .background(v-if="showPopup || showPopupEdit")
     popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" :indexTap="indexTap" @close-popup-edit="closeEdit")
@@ -126,6 +130,10 @@ const handleTaskEdit = (showEdit: any) => {
       font-family: "Inter", sans-serif;
       font-size: 18px;
       line-height: 20px;
+      a {
+        text-decoration: none;
+        color: black;
+      }
     }
   }
   img {
