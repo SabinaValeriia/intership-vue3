@@ -1,8 +1,8 @@
 <template lang="pug">
 .tasks
       h1 Список задач
-      h2 Нових {{ tasks.length }} задач
-      table.tasks--items(v-if="tasks.length")
+      h2 Нових задач
+      table.tasks--items
         tr
           th() Назва
           th Опис задачі
@@ -93,7 +93,7 @@ const editTask = (index: number) => {
 .popup-confirm {
   position: absolute;
   top: 300px;
-  background: #cbd9e7;
+  background: #ffff;
   border-radius: 15px;
   padding: 40px;
   z-index: 2;

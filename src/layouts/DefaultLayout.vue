@@ -1,24 +1,25 @@
 <template lang="pug">
-header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
-router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks" @task-edit-index="taskEditIndex")
+header-component(@edit-task="editTask", @modal-new-task="newTask")
+router-view(@tasks-delete="deleteTask", @task-edit="editTasks")
 </template>
 
 <script lang="ts" setup>
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
-import { ref } from "vue";
+import { ref, provide } from "vue";
+import { useRouter } from "vue-router";
+
 const tasks = ref<Tasks[]>([]);
-
-
-const addNewTask = (newTask: any) => {
-  tasks.value.push(newTask);
-};
 const deleteTask = (deleteItem: object) => {
-  const index = tasks.value.findIndex((task) => task === deleteItem);
-  if (index !== -1) {
-    tasks.value.splice(index, 1);
+  const taskIndex = tasks.value.findIndex((task) => task === deleteItem);
+  if (taskIndex !== -1) {
+    tasks.value.splice(taskIndex, 1);
   }
+  provide("taskIndex", taskIndex);
 };
+
+provide("tasks", tasks);
+
 let indexEdit = ref(-1);
 const showPopupEdit = ref(false);
 const closeShowPopupEdit = ref(false);
@@ -30,13 +31,22 @@ const editTask = (editTask: Tasks) => {
   closeShowPopupEdit.value = false;
 };
 
+provide("closeShowPopupEdit", closeShowPopupEdit);
+
 const editTasks = (indexes: number) => {
   indexEdit.value = indexes;
   showPopupEdit.value = true;
 };
+
+provide("indexEdit", indexEdit);
+
+const newTask = (newTaskCreate: any) => {
+  tasks.value.push(newTaskCreate);
+};
+provide("showPopupEdit", showPopupEdit);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../styles/core/colors";
 body {
   margin: 0;
