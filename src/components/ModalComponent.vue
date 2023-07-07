@@ -2,11 +2,11 @@
 .background
   .modals(@click.stop)
     h1 {{ showEdit ? "Редагувати таску" : "Додати нову таску" }}
-    button.close(@click="close")
+    button.close(@click="$parent.$emit('close')")
     slot(name="content")
-    .modals--block
-      button.cancel(@click="close") Відміна
-      button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
+    //- .modals--block
+    //-   button.cancel(@click="close") Відміна
+    //-   button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
 </template>
 <script setup lang="ts">
 import { ref, defineEmits, defineProps, computed, inject } from "vue";
@@ -18,6 +18,7 @@ const emit = defineEmits([
 ]);
 const close = () => {
   emit("close");
+
   console.log("close")
 };
 let indexEdit = inject("indexEdit");

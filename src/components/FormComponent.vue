@@ -1,6 +1,6 @@
 <template lang="pug">
-modal-component(@close="close" @modal-new-task="addTask" @edit-task="editTask")
-    template(v-slot:content)
+modal-component
+    template(v-slot:content @close="close")
         form
             label Проєкти 
                 span * 
@@ -22,7 +22,9 @@ modal-component(@close="close" @modal-new-task="addTask" @edit-task="editTask")
                 placeholder="Опис таски",
                 :value="showEdit ? indexEdit[indexTap] : taskDescriptionInput",
                 @input="taskDescriptionInput = $event.target.value")
-            
+        .modals--block
+            button.cancel(@click="emit('close')") Відміна
+            button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
 </template>
 
 <script setup lang="ts">
@@ -45,6 +47,7 @@ const emit = defineEmits([
   "close-popup-edit",
 ]);
 const close = () => {
+    console.log("close3")
   emit("close");
 };
 
