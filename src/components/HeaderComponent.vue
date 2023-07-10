@@ -16,37 +16,28 @@
           router-link(:to="{ name: 'profile' }")
             img.avatar(src="../assets/img/avatar.png")
     burger-menu.mobile
-.background(v-if="showPopup || showPopupEdit")
-    popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" :indexTap="indexTap" @close-popup-edit="closeEdit")
+form-component(v-if="showPopup || showPopupEdit" @close="closePopup" @modal-new-task="newTask" @edit-task="editTasks" )
 </template>
 
 <script lang="ts" setup>
+import FormComponent from "./FormComponent.vue";
 import {
-  ref, defineEmits, defineProps
+  ref, defineEmits, defineProps, inject
 } from "vue";
 import BurgerMenu from "../components/BurgerMenu.vue";
 import PopupComponent from "../components/PopupComponent.vue";
+import ModalComponent from "../components/ModalComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
 const showPopup = ref(false);
-const emit  = defineEmits(["new-task", "edit-task"]);
-const props = defineProps({
-  indexEdit: {
-    type: Number,
-  },
-  showPopupEdit: {
-    type: Boolean,
-  },
-  closeShowPopupEdit: {
-    type: Boolean,
-  },
-  indexTap: {
-    type: Number
-  }
-});
+const emit  = defineEmits(["new-task", "edit-task", "modal-new-task"]);
 const openPopup = () => {
   showPopup.value = true;
 };
 
+let deleteItem = inject("deleteItem");
+
+let showPopupEdit = inject("showPopupEdit"); 
+let closeShowPopupEdit = inject("closeShowPopupEdit");
 const closePopup = () => {
   showPopup.value = false;
 };
@@ -64,7 +55,11 @@ const handleTaskCreated = (showPopups: boolean) => {
 };
 const handleTaskEdit = (showEdit: any) => {
   showPopup.value = showEdit;
-};
+}
+const newTask = (newTaskCreate:any) => {
+  emit("modal-new-task", newTaskCreate);
+  closePopup();
+}
 
 </script>
 
