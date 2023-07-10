@@ -1,34 +1,37 @@
 <template lang="pug">
 modal-component
-    template(v-slot:content @close="close")
-        form
-            label Проєкти 
-                span * 
-            dropdown-component(:options="selectOptions")
-            label Тип таски
-                span * 
-            dropdown-component(:options="selectOptionsIssues")
-            label Назва
-                span * 
-            input(
-                type="text",
-                :value="showEdit ? indexEdit[indexTap] : taskNameInput",
-                placeholder="Назва"
-                @input="taskNameInput = $event.target.value")
-            label Опис таски
-                span * 
-            input(
-                type="text",
-                placeholder="Опис таски",
-                :value="showEdit ? indexEdit[indexTap] : taskDescriptionInput",
-                @input="taskDescriptionInput = $event.target.value")
-        .modals--block
-            button.cancel(@click="emit('close')") Відміна
-            button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
+  slot(name="close", :close="close")
+  template(v-slot:content="{ close }", :close="close")
+    form
+      label Проєкти
+        span *
+      dropdown-component(:options="selectOptions")
+      label Тип таски
+        span *
+      dropdown-component(:options="selectOptionsIssues")
+      label Назва
+        span *
+      input(
+        type="text",
+        :value="showEdit ? indexEdit[indexTap] : taskNameInput",
+        placeholder="Назва",
+        @input="taskNameInput = $event.target.value"
+      )
+      label Опис таски
+        span *
+      input(
+        type="text",
+        placeholder="Опис таски",
+        :value="showEdit ? indexEdit[indexTap] : taskDescriptionInput",
+        @input="taskDescriptionInput = $event.target.value"
+      )
+    .modals--block
+      button.cancel(@click="emit('close')") Відміна
+      button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
 </template>
 
 <script setup lang="ts">
-import DropdownComponent from "./DropdownComponent.vue"
+import DropdownComponent from "./DropdownComponent.vue";
 import ModalComponent from "./ModalComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
 import {
@@ -38,8 +41,11 @@ import {
   computed,
   onMounted,
   inject,
-  provide
+  provide,
 } from "vue";
+const props = defineProps({
+  close: Function,
+});
 const emit = defineEmits([
   "close",
   "edit-task",
@@ -47,12 +53,17 @@ const emit = defineEmits([
   "close-popup-edit",
 ]);
 const close = () => {
-    console.log("close3")
+  console.log("close3");
+  props.close();
   emit("close");
 };
 
-const selectOptions = ["onix-time-manager (TIME)", "Quentn Website (QW)", "Hotel Monthly  (HOT)"];
-const selectOptionsIssues = ["Задача", "Баг"]
+const selectOptions = [
+  "onix-time-manager (TIME)",
+  "Quentn Website (QW)",
+  "Hotel Monthly  (HOT)",
+];
+const selectOptionsIssues = ["Задача", "Баг"];
 let indexEdit = inject("indexEdit");
 
 const showEdit = computed(() => {
@@ -65,12 +76,10 @@ const addTask = () => {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
   };
-  console.log(newTaskCreate)
+  console.log(newTaskCreate);
   emit("modal-new-task", newTaskCreate);
   provide("newTaskCreate", newTaskCreate);
 };
-
-
 
 const editTask = () => {
   const editTask: Tasks = {
@@ -89,17 +98,16 @@ const handleTaskAction = () => {
     addTask();
   }
 };
-
 </script>
 
 <style lang="scss" scoped>
 form {
-    label {
-        margin:  0 0 10px 5px;
-         span{
-           margin-left: 5px;
-            color: red;
-         }
+  label {
+    margin: 0 0 10px 5px;
+    span {
+      margin-left: 5px;
+      color: red;
     }
+  }
 }
 </style>

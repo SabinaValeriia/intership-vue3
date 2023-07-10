@@ -2,8 +2,9 @@
 .background
   .modals(@click.stop)
     h1 {{ showEdit ? "Редагувати таску" : "Додати нову таску" }}
-    button.close(@click="$parent.$emit('close')")
     slot(name="content")
+    div(slot="item" slot-scope="{close}")
+      button.close(@click="close")
     //- .modals--block
     //-   button.cancel(@click="close") Відміна
     //-   button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
