@@ -34,7 +34,6 @@ const openPopup = () => {
   showPopup.value = true;
 };
 
-let deleteItem = inject("deleteItem");
 
 let showPopupEdit = inject("showPopupEdit"); 
 let closeShowPopupEdit = inject("closeShowPopupEdit");

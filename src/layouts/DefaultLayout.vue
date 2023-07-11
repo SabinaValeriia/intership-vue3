@@ -9,7 +9,13 @@ import { Tasks } from "@/types/interfaceTask";
 import { ref, provide } from "vue";
 import { useRouter } from "vue-router";
 
-const tasks = ref<Tasks[]>([]);
+// const tasks = ref<Tasks[]>([]);
+const tasks = ref<Tasks[][]>({
+  toDo: [], 
+  inProgress: [], 
+  review : [], 
+  done: []  
+});
 const deleteTask = (deleteItem: object) => {
   const taskIndex = tasks.value.findIndex((task) => task === deleteItem);
   if (taskIndex !== -1) {
@@ -41,7 +47,9 @@ const editTasks = (indexes: number) => {
 provide("indexEdit", indexEdit);
 
 const newTask = (newTaskCreate: any) => {
-  tasks.value.push(newTaskCreate);
+  const task = { ...newTaskCreate, type: "toDo" };
+  tasks.value.toDo.push(task);
+  console.log(tasks);
 };
 provide("showPopupEdit", showPopupEdit);
 </script>

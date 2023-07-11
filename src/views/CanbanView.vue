@@ -1,103 +1,215 @@
 <template lang="pug">
-.background
-    h1 Дошка KANBAN
-    .tasks-item 
-        .block 
-            h2 Вибрано для розробки 
-            .block-item 
-                h3 Task3
-        .block
-            h2 У роботі 
-            .block-item 
-                h3 Task1 
-        .block
-            h2 Ревью
-            .block-item 
-                h3 Task2
-        .block
-            h2 Завершено
-            .block-item 
-                h3 Task4
+.canban
+  h2 Дошка Kanban
+  .columns
+    .column
+      h3 To Do
+        span {{ tasks.toDo.length }}
+      VueDraggableNext(
+        v-model="tasks.toDo",
+        group="tasksGroup",
+        @end="onTasksChange('toDo')"
+      )
+        .task-item(v-for="task in tasks.toDo", :key="task.id", v-draggable) {{ task.name }}
+          .task-block
+            .task-desc
+              img(
+                src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+                alt="Баг"
+              )
+              img(
+                src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
+                alt="Приоритет Normal"
+              )
+              svg(
+                width="24",
+                height="24",
+                viewBox="0 0 24 24",
+                role="presentation"
+              )
+                path(
+                  d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
+                  fill="currentColor",
+                  fill-rule="evenodd"
+                )
+            .task-desc 
+              //- h6 {{ $route.params.key }}
+              img(src="../assets/img/avatar.png")
+    .column
+      h3 In Progress
+        span {{ tasks.inProgress.length }}
+      VueDraggableNext(
+        v-model="tasks.inProgress",
+        group="tasksGroup",
+        @end="onTasksChange('inProgress')"
+      )
+        .task-item(
+          v-for="task in tasks.inProgress",
+          :key="task.id",
+          v-draggable
+        ) {{ task.name }}
+          .task-block
+            .task-desc
+              img(
+                src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+                alt="Баг"
+              )
+              img(
+                src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
+                alt="Приоритет Normal"
+              )
+              svg(
+                width="24",
+                height="24",
+                viewBox="0 0 24 24",
+                role="presentation"
+              )
+                path(
+                  d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
+                  fill="currentColor",
+                  fill-rule="evenodd"
+                )
+            .task-desc 
+              //- h6 {{ $route.params.key }}
+              img(src="../assets/img/avatar.png")
+
+    .column
+      h3 Review
+        span {{ tasks.review.length }}
+      VueDraggableNext(
+        v-model="tasks.review",
+        group="tasksGroup",
+        @end="onTasksChange('review')"
+      )
+        .task-item(v-for="task in tasks.review", :key="task.id", v-draggable) {{ task.name }}
+          .task-block
+            .task-desc
+              img(
+                src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+                alt="Баг"
+              )
+              img(
+                src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
+                alt="Приоритет Normal"
+              )
+              svg(
+                width="24",
+                height="24",
+                viewBox="0 0 24 24",
+                role="presentation"
+              )
+                path(
+                  d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
+                  fill="currentColor",
+                  fill-rule="evenodd"
+                )
+            .task-desc 
+              //- h6 {{ $route.params.key }}
+              img(src="../assets/img/avatar.png")
+    .column
+      h3 Done
+        span {{ tasks.done.length }}
+      VueDraggableNext(
+        v-model="tasks.done",
+        group="tasksGroup",
+        @end="onTasksChange('done')"
+      )
+        .task-item(v-for="task in tasks.done", :key="task.id", v-draggable) {{ task.name }}
+          .task-block
+            .task-desc
+              img(
+                src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+                alt="Баг"
+              )
+              img(
+                src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
+                alt="Приоритет Normal"
+              )
+              svg(
+                width="24",
+                height="24",
+                viewBox="0 0 24 24",
+                role="presentation"
+              )
+                path(
+                  d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
+                  fill="currentColor",
+                  fill-rule="evenodd"
+                )
+            .task-desc 
+              //- h6 {{ $route.params.key }}
+              img(src="../assets/img/avatar.png")
 </template>
 
-<script setup lang="ts">
-import HeaderComponent from "@/components/HeaderComponent.vue";
+<script lang="ts" setup>
+import { defineComponent, inject } from "vue";
+import { VueDraggableNext } from "vue-draggable-next";
+
+const tasks = inject("tasks");
+
+const onTasksChange = (columnType: string) => {
+  console.log(columnType);
+};
 </script>
 
-<style lang="scss" scoped>
-.background {
-  background: url("../assets/img/bg-tablet.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: max-content;
-  width: 100%;
-  min-height: 100vh;
-  padding-bottom: 30px;
-  h1 {
-    text-align: left;
-    font-family: "Inter", sans-serif;
-    font-size: 28px;
-    line-height: 34px;
-    margin: 0 15px 0 15px;
-    padding: 15px 0;
-  }
-  .tasks-item {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-left: 15px;
-    .block {
-      padding: 15px;
-      background: #d4d8dd;
-      height: max-content;
-      width: 220px;
-      min-height: 250px;
-      border-radius: 6px;
-      filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.25));
-      &-item {
-        height: 40px;
-        background: #e9eef2;
-        border-radius: 6px;
-        padding: 10px;
-        h3 {
-          padding: 0;
-          margin: 0;
-        }
-      }
-      h2 {
-        font-family: "Inter", sans-serif;
-        font-size: 18px;
-        line-height: 20px;
-        text-align: left;
-        padding: 0;
-        margin: 0 0 15px 0;
-      }
-    }
-  }
-  .hide {
-    display: none;
+<style scoped lang="scss">
+.canban {
+  padding: 40px;
+}
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.column {
+  flex: 1;
+  margin-right: 10px;
+  background: rgb(244 245 247);
+  width: 214px;
+  padding: 20px 5px;
+  border-radius: 6px;
+}
+
+h3 {
+  margin: 0 0 10px 10px;
+  color: #42526e;
+  span {
+    margin-left: 5px;
   }
 }
 
-@media (max-width: 768px) {
-  .tasks-item {
-    .block {
-      width: 150px;
+.task-item {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  height: 54px;
+  border-radius: 6px;
+}
+.task-block {
+  display: flex;
+  justify-content: space-between;
+  .task-desc {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    img {
+      width: 20px;
+      height: 20px;
+      &:first-child {
+        margin-right: 5px;
+      }
+    }
+    h6 {
+      padding: 0px;
+      margin: 0px 5px 0 0;
     }
   }
 }
 
 @media (max-width: 375px) {
-  .hide {
-    display: block;
-  }
-  .background {
-    .tasks-item {
-      .block {
-        width: 100%;
-        margin-right: 15px;
-      }
-    }
+  .columns {
+    flex-direction: column;
+    gap: 20px;
   }
 }
 </style>
