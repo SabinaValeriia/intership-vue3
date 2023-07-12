@@ -61,9 +61,14 @@ const projects = [
     img: "project1.svg",
   },
   {
-    name: "Bracketology",
-    key: "Brack",
-    img: "project1.svg",
+    name: "Quentn Website (QW)",
+    key: "QW",
+    img: "quentn.svg",
+  },
+  {
+    name: "Hotel Monthly  (HOT)",
+    key: "HOT",
+    img: "hot.png",
   },
 ];
 const route = useRoute();

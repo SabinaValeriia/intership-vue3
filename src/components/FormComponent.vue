@@ -5,10 +5,10 @@ modal-component
     form
       label Проєкти
         span *
-      dropdown-component(:options="selectOptions")
+      dropdown-component(:options="selectOptions" @input="input") 
       label Тип таски
         span *
-      dropdown-component(:options="selectOptionsIssues")
+      dropdown-component(:options="selectOptionsIssues" @input="inputProject")
       label Назва
         span *
       input(
@@ -59,11 +59,33 @@ const close = () => {
 };
 
 const selectOptions = [
-  "onix-time-manager (TIME)",
-  "Quentn Website (QW)",
-  "Hotel Monthly  (HOT)",
+  {
+    name: "onix-time-manager (TIME)",
+    img: "project1.svg",
+  },
+  {
+    name: "Quentn Website (QW)",
+    img: "quentn.svg",
+  },
+  {
+    name: "Hotel Monthly  (HOT)",
+    img: "hot.png",
+  },
 ];
-const selectOptionsIssues = ["Задача", "Баг"];
+const selectOptionsIssues = [
+{
+    name: "Задача",
+    img: "task.svg",
+  },
+  {
+    name: "Баг",
+    img: "task-bag.svg",
+  },
+  {
+    name: "Епік",
+    img: "epic.svg",
+  }
+];
 let indexEdit = inject("indexEdit");
 
 const showEdit = computed(() => {
@@ -71,10 +93,14 @@ const showEdit = computed(() => {
 });
 const taskNameInput = ref("");
 const taskDescriptionInput = ref("");
+const taskTypeInput = ref("");
+const projectInput = ref("");
 const addTask = () => {
   const newTaskCreate: Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
+    type: taskTypeInput.value,
+    project: projectInput.value,
   };
   console.log(newTaskCreate);
   emit("modal-new-task", newTaskCreate);
@@ -85,6 +111,8 @@ const editTask = () => {
   const editTask: Tasks = {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
+    type: taskTypeInput.value,
+    project: projectInput.value,
   };
   console.log(editTask);
   emit("edit-task", editTask);
@@ -98,6 +126,20 @@ const handleTaskAction = () => {
     addTask();
   }
 };
+
+const input = (selected: any) => {
+  
+  const regex = /\((.*?)\)/; // Regular expression to match text within parentheses
+  const matches = selected.match(regex);
+  if (matches && matches.length > 1) {
+    const projectName = matches[1];
+    projectInput.value = projectName;
+    console.log(projectInput.value);
+  }
+}
+const inputProject = (selected: any) => {
+  taskTypeInput.value = selected
+}
 </script>
 
 <style lang="scss" scoped>

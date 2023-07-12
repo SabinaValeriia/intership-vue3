@@ -11,17 +11,25 @@
         :disabled="!enabled",
         item-key="name",
         ghost-class="ghost",
-        :move="checkMove",
         @start="dragging = true",
         @end="dragging = false"
       )
         template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
+          .task-item(:class="{ 'not-draggable': !enabled }" v-if="$route.params.key === element.project") {{ element.name }}
             .task-block
               .task-desc
                 img(
+                  v-if="element.type === 'Баг'"
                   src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
                   alt="Баг"
+                )
+                img(
+                  v-else-if="element.type === 'Задача'"
+                  src="../assets/img/task.svg",
+                )
+                img(
+                  v-else
+                  src="../assets/img/epic.svg"
                 )
                 img(
                   src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
@@ -39,7 +47,7 @@
                     fill-rule="evenodd"
                   )
               .task-desc 
-                h6 {{ $route.params.key }}
+                h6 {{ element.project }}
                 img(src="../assets/img/avatar.png")
     .column
       h3 In Progress
@@ -50,17 +58,25 @@
         :disabled="!enabled",
         item-key="name",
         ghost-class="ghost",
-        :move="checkMove",
         @start="dragging = true",
         @end="dragging = false"
       )
         template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
+          .task-item(:class="{ 'not-draggable': !enabled }" v-if="$route.params.key === element.project") {{ element.name }}
             .task-block
               .task-desc
                 img(
+                  v-if="element.type === 'Баг'"
                   src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
                   alt="Баг"
+                )
+                img(
+                  v-else-if="element.type === 'Задача'"
+                  src="../assets/img/task.svg",
+                )
+                img(
+                  v-else
+                  src="../assets/img/epic.svg"
                 )
                 img(
                   src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
@@ -90,17 +106,25 @@
         :disabled="!enabled",
         item-key="name",
         ghost-class="ghost",
-        :move="checkMove",
         @start="dragging = true",
         @end="dragging = false"
       )
         template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
+          .task-item(:class="{ 'not-draggable': !enabled }" v-if="$route.params.key === element.project") {{ element.name }}
             .task-block
               .task-desc
                 img(
+                  v-if="element.type === 'Баг'"
                   src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
                   alt="Баг"
+                )
+                img(
+                  v-else-if="element.type === 'Задача'"
+                  src="../assets/img/task.svg",
+                )
+                img(
+                  v-else
+                  src="../assets/img/epic.svg"
                 )
                 img(
                   src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",
@@ -129,17 +153,25 @@
         :disabled="!enabled",
         item-key="name",
         ghost-class="ghost",
-        :move="checkMove",
         @start="dragging = true",
         @end="dragging = false"
       )
         template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
+          .task-item(:class="{ 'not-draggable': !enabled }" v-if="$route.params.key === element.project") {{ element.name }}
             .task-block
               .task-desc
                 img(
+                  v-if="element.type === 'Баг'"
                   src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
                   alt="Баг"
+                )
+                img(
+                  v-else-if="element.type === 'Задача'"
+                  src="../assets/img/task.svg",
+                )
+                img(
+                  v-else
+                  src="../assets/img/epic.svg"
                 )
                 img(
                   src="https://onix-systems.atlassian.net/images/icons/priorities/medium.svg",

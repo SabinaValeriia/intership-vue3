@@ -47,7 +47,7 @@ const editTasks = (indexes: number) => {
 provide("indexEdit", indexEdit);
 
 const newTask = (newTaskCreate: any) => {
-  const task = { ...newTaskCreate, type: "toDo" };
+  const task = { ...newTaskCreate };
   tasks.value.toDo.push(task);
   console.log(tasks);
 };

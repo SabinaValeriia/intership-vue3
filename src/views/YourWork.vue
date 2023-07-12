@@ -9,7 +9,7 @@
             .your-work--block-item(v-for="work in works")
                 img(:src="require(`../assets/img/${work.img}`)")
                 .item
-                    h4 {{ work.name }}
+                    router-link(:to="{ name: 'canban', params: { key: work.key }}") {{ work.name }}
                     p {{ work.desc }}
                     h5 швидкі посилання 
                     h6 Мої відкриті задачі
@@ -25,25 +25,22 @@ const works = [
     name: "onix-time-manager",
     desc: "Програмное обеспечение",
     board: 1,
+    key: "TIME",
     img: "project1.svg",
   },
   {
-    name: "Goals",
+    name: "Quentn Website (QW)",
     desc: "Бизнес-проект, управляемый компанией",
+    key: "QW",
     board: 1,
-    img: "project1.svg",
+    img: "quentn.svg",
   },
   {
-    name: "Onix: Resource Exchange",
+    name: "Hotel Monthly  (HOT)",
     desc: "Програмное обеспечение",
     board: 0,
-    img: "project1.svg",
-  },
-  {
-    name: "Pre-Sale II",
-    desc: "Програмное обеспечение",
-    board: 0,
-    img: "project1.svg",
+    key: "HOT",
+    img: "hot.png",
   },
 ];
 </script>
@@ -82,9 +79,12 @@ const works = [
       }
       .item {
         margin: 0 0 0 10px;
-        h4 {
+        a {
           margin: 18px 0 0;
           font-size: 14px;
+          color: black;
+          text-decoration: none;
+          font-weight: bold;
         }
         h5 {
           font-size: 11px;
