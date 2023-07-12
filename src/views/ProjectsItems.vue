@@ -11,6 +11,8 @@
 </template>
 
 <script setup lang="ts">
+import TestComp from "../components/TestComp.vue";
+
 import { inject } from "vue";
 
 let tasks = inject("tasks");
