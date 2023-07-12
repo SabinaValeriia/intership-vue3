@@ -12,10 +12,8 @@
     "pug-plain-loader": "^1.1.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
-    "vue-draggable-next": "^2.2.1",
     "vue-router": "^4.2.2",
-    "vue3-draggable": "^2.0.9",
-    "vuedraggable": "^2.24.3",
+    "vuedraggable": "^4.1.0",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
