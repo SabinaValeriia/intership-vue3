@@ -163,7 +163,6 @@
 
 <script lang="ts" setup>
 import { defineComponent, inject, ref } from "vue";
-import { VueDraggableNext } from "vue-draggable-next";
 import draggable from "vuedraggable";
 const tasks = inject("tasks");
 
