@@ -4,7 +4,7 @@
     h1 {{ showEdit ? "Редагувати таску" : "Додати нову таску" }}
     slot(name="content")
     div(slot="item" slot-scope="{close}")
-      button.close(@click="close")
+      button.close(@click="$parent.$emit('close')")
     //- .modals--block
     //-   button.cancel(@click="close") Відміна
     //-   button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
@@ -19,8 +19,6 @@ const emit = defineEmits([
 ]);
 const close = () => {
   emit("close");
-
-  console.log("close")
 };
 let indexEdit = inject("indexEdit");
 

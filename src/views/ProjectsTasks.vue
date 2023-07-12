@@ -58,6 +58,8 @@ import TasksList from "./TasksList.vue";
 const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit"]);
 
 let tasks = inject("tasks");
+console.log(tasks)
+
 const showAllIndex = ref(-1);
 
 const allOptions = (index: number) => {

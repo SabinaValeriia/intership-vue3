@@ -13,7 +13,7 @@ router-view
       label.distance(for="name") Name
       input#name(:class="{ error: isError }" type="name" placeholder="Type your name" v-model.trim="name" @input="checkName" @blur="checkName")
       .error-message(v-if="nameError") {{ nameError }}
-      label.distance(for="password") Password 
+      label.distance(for="password") Password
       input#password(:class="{ error: isError }" type="password" placeholder="Type your password" v-model.trim="password" @input="checkPassword" @blur="checkPassword")
       .error-message(v-if="passwordError") {{ passwordError }}
       label.distance(for="role") User role
@@ -23,7 +23,7 @@ router-view
           div(v-for="(option, index) in options" :key="index" @click="selectOption(index)") {{ option }}
         .error-message(v-if="roleError") {{ roleError }}
       button.main.log-in(type="submit")#submit Sign up
-      p Already have an account? 
+      p Already have an account?
         router-link.sign-up(to="/auth/login") Log in
 </template>
 
