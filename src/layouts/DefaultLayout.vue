@@ -11,10 +11,24 @@ import { useRouter } from "vue-router";
 
 // const tasks = ref<Tasks[]>([]);
 const tasks = ref<Tasks[][]>({
-  toDo: [], 
-  inProgress: [], 
-  review : [], 
-  done: []  
+  TIME: {
+    toDo: [],
+    inProgress: [],
+    review: [],
+    done: [],
+  },
+  QW: {
+    toDo: [],
+    inProgress: [],
+    review: [],
+    done: [],
+  },
+  HOT: {
+    toDo: [],
+    inProgress: [],
+    review: [],
+    done: [],
+  },
 });
 const deleteTask = (deleteItem: object) => {
   const taskIndex = tasks.value.findIndex((task) => task === deleteItem);
@@ -47,8 +61,12 @@ const editTasks = (indexes: number) => {
 provide("indexEdit", indexEdit);
 
 const newTask = (newTaskCreate: any) => {
-  const task = { ...newTaskCreate, type: "toDo" };
-  tasks.value.toDo.push(task);
+  const task = { ...newTaskCreate };
+  const projectName = task.project;
+
+  if (projectName in tasks.value) {
+    tasks.value[projectName].toDo.push(task);
+  }
   console.log(tasks);
 };
 provide("showPopupEdit", showPopupEdit);

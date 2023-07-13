@@ -7,38 +7,37 @@
       :key="i",
       @click="selectOption(option)"
     ) 
-      img(src="../assets/img/project1.svg")
-      | {{ option }}
+      img(:src="require(`../assets/img/${option.img}`)")
+      | {{ option.name }}
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, defineEmits, defineProps } from "vue";
 
 const props = defineProps({
-    options: {
-        type: Array,
-    },
-    tabindex: {
-        type: Number,
-        default: 0
-    }
-
-})
+  options: {
+    type: Array,
+  },
+  tabindex: {
+    type: Number,
+    default: 0,
+  },
+});
 
 const selected = ref<string | null>(null);
 const open = ref(false);
 
 onMounted(() => {
-  selected.value = props.options.length > 0 ? props.options[0] : null;
+  selected.value = props.options.length > 0 ? props.options[0].name : null;
   emit("input", selected.value);
 });
 
 const selectOption = (option: string) => {
-  selected.value = option;
+  selected.value = option.name;
   open.value = false;
   emit("input", selected.value);
 };
-const emit  = defineEmits(["input"])
+const emit = defineEmits(["input"]);
 </script>
 
 <style scoped lang="scss">
@@ -104,8 +103,10 @@ const emit  = defineEmits(["input"])
 
   &--block {
     display: flex;
+    align-items: center;
     img {
       width: 20px;
+      height: 20px;
       margin-right: 10px;
     }
   }
