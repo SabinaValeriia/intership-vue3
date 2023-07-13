@@ -129,7 +129,7 @@ const handleTaskAction = () => {
 
 const input = (selected: any) => {
   
-  const regex = /\((.*?)\)/; // Regular expression to match text within parentheses
+  const regex = /\((.*?)\)/;
   const matches = selected.match(regex);
   if (matches && matches.length > 1) {
     const projectName = matches[1];

@@ -59,16 +59,19 @@ const projects = [
     name: "Onix-time-management",
     key: "TIME",
     img: "project1.svg",
+    index: 1
   },
   {
     name: "Quentn Website (QW)",
     key: "QW",
     img: "quentn.svg",
+    index: 2
   },
   {
     name: "Hotel Monthly  (HOT)",
     key: "HOT",
     img: "hot.png",
+    index: 3
   },
 ];
 const route = useRoute();

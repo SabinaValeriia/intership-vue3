@@ -1,7 +1,7 @@
 <template lang="pug">
 .projects-tasks
   h1 Задачі
-  table.projects-tasks--block(v-if="tasks.toDo.length > 0")
+  table.projects-tasks--block
     tr 
       th Тип
       th Ключ
