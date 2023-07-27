@@ -11,7 +11,7 @@
       th Інфо
       th
     tr(
-      v-for="(task, index) in tasks.toDo",
+      v-for="(task, index) in tasks",
     )
       td
         .table--block

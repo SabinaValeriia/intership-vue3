@@ -95,6 +95,9 @@ const taskNameInput = ref("");
 const taskDescriptionInput = ref("");
 const taskTypeInput = ref("");
 const projectInput = ref("");
+const tasks = inject("tasks");
+
+
 const addTask = () => {
   const newTaskCreate: Tasks = {
     name: taskNameInput.value,
@@ -102,7 +105,6 @@ const addTask = () => {
     type: taskTypeInput.value,
     project: projectInput.value,
   };
-  console.log(newTaskCreate);
   emit("modal-new-task", newTaskCreate);
   provide("newTaskCreate", newTaskCreate);
 };
