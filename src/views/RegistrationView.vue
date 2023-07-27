@@ -2,35 +2,67 @@
 router-view
 .account--bg
   .account--block
-    form.account--block-form#form(@submit.prevent="checkInputs")
+    form#form.account--block-form(@submit.prevent="checkInputs")
       img.account--logo-mobile(src="../assets/img/academy-logo-tablet.svg")
       h1 Sign up
       button.main.google Sign up with Google
       h2 Or continue with
       label(for="email") Email Address
-      input#InputEmail(:class="{ error: isError }" placeholder="Type your email address" v-model.trim="email" @input="checkEmail" @blur="checkEmail")
+      input#InputEmail(
+        :class="{ error: isError }",
+        placeholder="Type your email address",
+        v-model.trim="registrationData.email",
+        @input="checkEmail",
+        @blur="checkEmail"
+      )
       .error-message(v-if="emailError") {{ emailError }}
       label.distance(for="name") Name
-      input#name(:class="{ error: isError }" type="name" placeholder="Type your name" v-model.trim="name" @input="checkName" @blur="checkName")
+      input#name(
+        :class="{ error: isError }",
+        type="name",
+        placeholder="Type your name",
+        v-model.trim="registrationData.username",
+        @input="checkName",
+        @blur="checkName"
+      )
       .error-message(v-if="nameError") {{ nameError }}
       label.distance(for="password") Password
-      input#password(:class="{ error: isError }" type="password" placeholder="Type your password" v-model.trim="password" @input="checkPassword" @blur="checkPassword")
+      input#password(
+        :class="{ error: isError }",
+        type="password",
+        placeholder="Type your password",
+        v-model.trim="registrationData.password",
+        @input="checkPassword",
+        @blur="checkPassword"
+      )
       .error-message(v-if="passwordError") {{ passwordError }}
       label.distance(for="role") User role
-      .select-container#role
-        .select(@click="toggleSelect" @blur="checkRole" :class="{ error: isError }") {{ selectedText }}
-        .selectlist(v-show="isSelectOpen")
-          div(v-for="(option, index) in options" :key="index" @click="selectOption(index)") {{ option }}
-        .error-message(v-if="roleError") {{ roleError }}
-      button.main.log-in(type="submit")#submit Sign up
+      input#role(
+        :class="{ error: isError }",
+        type="text",
+        placeholder="Type your role",
+        v-model.trim="registrationData.role",
+        @input="checkRole",
+        @blur="checkRole"
+      )
+      .error-message(v-if="roleError") {{ roleError }}
+      //- .select-container#role
+      //-   .select(@click="toggleSelect" @blur="checkRole" :class="{ error: isError }") {{ selectedText }}
+      //-   .selectlist(v-show="isSelectOpen")
+      //-     div(v-for="(option, index) in options" :key="index" @click="selectOption(index)") {{ option }}
+      //-   .error-message(v-if="roleError") {{ roleError }}
+      button#submit.main.log-in(type="submit") Sign up
       p Already have an account?
-        router-link.sign-up(to="/auth/login") Log in
+        router-link.sign-up(to="login") Log in
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
+import userApi from "@/services/api/userApi";
+import axios from "axios";
+import router from "@/router";
 
-const options = ref(["Admin", "User"]);
+const options = ref(["Administration", "User"]);
 const selectedOptionIndex = ref(-1);
 const isSelectOpen = ref(false);
 
@@ -49,12 +81,16 @@ const selectedText = computed(() => {
     : "Select";
 });
 
-const email = ref("");
-const password = ref("");
+const registrationData = ref({
+  username: "",
+  email: "",
+  password: "",
+  role: "",
+});
+
 const emailError = ref("");
-const role = ref("");
+
 const roleError = ref("");
-const name = ref("");
 const passwordError = ref("");
 const nameError = ref("");
 const isError = ref(false);
@@ -66,11 +102,11 @@ const isEmail = (email: string): boolean => {
 
   return emailRegex.test(email);
 };
-const isName = (name: string): boolean => {
+const isName = (username: string): boolean => {
   //eslint-disable-next-line
   const nameRegex = /^[A-Za-z]+$/;
 
-  return nameRegex.test(name);
+  return nameRegex.test(username);
 };
 const isPassword = (password: string): boolean => {
   const passwordRegex =
@@ -80,7 +116,7 @@ const isPassword = (password: string): boolean => {
 };
 
 const checkEmail = () => {
-  const emailValue = email.value.trim();
+  const emailValue = registrationData.value.email.trim();
   if (!emailValue) {
     emailError.value = "This field is required.";
     isError.value = true;
@@ -94,7 +130,7 @@ const checkEmail = () => {
 };
 
 const checkName = () => {
-  const nameValue = name.value.trim();
+  const nameValue = registrationData.value.username.trim();
   if (!nameValue) {
     nameError.value = "This field is required.";
     isError.value = true;
@@ -108,7 +144,7 @@ const checkName = () => {
 };
 
 const checkPassword = () => {
-  const passwordValue = password.value.trim();
+  const passwordValue = registrationData.value.password.trim();
   if (!passwordValue) {
     passwordError.value = "This field is required.";
     isError.value = true;
@@ -122,30 +158,31 @@ const checkPassword = () => {
   }
 };
 
-watch(role, () => {
-  checkRole();
-});
-
 onMounted(() => {
   localStorage.removeItem("isAuthenticated");
 });
 
 const checkRole = () => {
-  const roleValue = role.value.trim();
+  const roleValue = registrationData.value.role.trim();
   if (roleValue === "" || roleValue === "Select") {
     roleError.value = "This field is required.";
     isError.value = true;
-  } else if (roleValue === "Admin" || roleValue === "User") {
+  } else if (roleValue === "Administration" || roleValue === "User") {
     roleError.value = "";
     isError.value = false;
   }
 };
 
-const checkInputs = () => {
+const checkInputs = async () => {
   checkEmail();
   checkPassword();
   checkName();
   checkRole();
+
+  userApi.registerUser(registrationData.value).then((res) => {
+    router.push({ name: "login" });
+    console.log(res);
+  });
 };
 </script>
 <style lang="scss">

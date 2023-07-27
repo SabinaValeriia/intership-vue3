@@ -1,38 +1,58 @@
 <template lang="pug">
 .account--bg
   .account--block
-    form.account--block-form#form(@submit.prevent="checkInputs")
+    form#form.account--block-form(@submit.prevent="checkInputs")
       img.account--logo-mobile(src="../assets/img/academy-logo.svg")
       h1.login Log in
-      button.main.google#google-signin-button Log in with Google
+      button#google-signin-button.main.google Log in with Google
       h2 Or continue with
       label(for="email") Email Address
-      input#InputEmail(:class="{ error: isError }" placeholder="Type your email address" v-model.trim="email" @input="checkEmail" @blur="checkEmail")
+      input#InputEmail(
+        :class="{ error: isError }",
+        placeholder="Type your email address",
+        v-model.trim="loginData.identifier",
+        @input="checkEmail",
+        @blur="checkEmail"
+      )
       .error-message(v-if="emailError") {{ emailError }}
-      label.distance(for="password") Password 
-      input#password(:class="{ error: isError }" type="password" placeholder="Type your password" v-model.trim="password" @input="checkPassword" @blur="checkPassword")
+      label.distance(for="password") Password
+      input#password(
+        :class="{ error: isError }",
+        type="password",
+        placeholder="Type your password",
+        v-model.trim="loginData.password",
+        @input="checkPassword",
+        @blur="checkPassword"
+      )
       .error-message(v-if="passwordError") {{ passwordError }}
       button.forgot Forgot your password?
-      router-link.main.log-in(to="/dashboard/your-work" type="submit" @click="submit")#submit Log in
-      p.login--distance New user? 
-        router-link.sign-up(to="/auth/registration")  Sign up
+      button#submit.main.log-in(type="submit", @click="submit") Log in
+      p.login--distance New user?
+        router-link.sign-up(to="/registration") Sign up
 </template>
 
 <script setup lang="ts">
+import userApi from "@/services/api/userApi";
 import router from "@/router";
 import { ref } from "vue";
-const email = ref("");
-const password = ref("");
+import axios from "axios";
+
+const loginData = ref({
+  identifier: "",
+  password: "",
+});
+
+
 const emailError = ref("");
 const passwordError = ref("");
 const isError = ref(false);
-const isEmail = (email: string): boolean => {
+const isEmail = (identifier: string): boolean => {
   //eslint-disable-next-line
   const emailRegex =
     // eslint-disable-next-line
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-  return emailRegex.test(email);
+  return emailRegex.test(identifier);
 };
 const isPassword = (password: string): boolean => {
   const passwordRegex =
@@ -41,13 +61,19 @@ const isPassword = (password: string): boolean => {
   return !passwordRegex;
 };
 
-const submit = () => {
-  localStorage.setItem("isAuthenticated", "true");
-  router.push({name: 'your-work'});
+const submit = async () => {
+  userApi.loginUser(loginData.value).then((res) => {
+    if (res) {
+      const authToken = res.data.jwt;
+      localStorage.setItem("isAuthenticated", authToken);
+      router.push({ name: "your-work" });
+      console.log(res);
+    }
+  });
 };
 
 const checkEmail = () => {
-  const emailValue = email.value.trim();
+  const emailValue = loginData.value.identifier.trim();
   if (!emailValue) {
     emailError.value = "This field is required.";
     isError.value = true;
@@ -61,7 +87,7 @@ const checkEmail = () => {
 };
 
 const checkPassword = () => {
-  const passwordValue = password.value.trim();
+  const passwordValue = loginData.value.password.trim();
   if (!passwordValue) {
     passwordError.value = "Password cannot be blank";
     isError.value = true;
