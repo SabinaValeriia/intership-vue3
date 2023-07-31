@@ -1,7 +1,7 @@
 <template lang="pug">
 .projects-tasks
   h1 Задачі
-  table.projects-tasks--block(v-if="tasks.length > 0")
+  table.projects-tasks--block
     tr 
       th Тип
       th Ключ
@@ -10,40 +10,52 @@
       th Автор
       th Інфо
       th
-    tr(v-for="(task, index) in tasks")
-      td 
-          .table--block
-            img(src="../assets/img/bag.svg")
-            | Баг
-      td {{ $route.params.key }}
+    tr(
+      v-for="(task, index) in tasks",
+    )
+      td
+        .table--block
+          .table--block-img(v-if="task.type === 'Баг'")
+            img(
+              src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+              alt="Баг"
+            ) 
+            p {{ task.type }}
+          .table--block-img(v-else-if="task.type === 'Задача'")
+            img(src="../assets/img/task.svg") 
+            p {{ task.type }}
+          .table--block-img(v-else)
+            img(src="../assets/img/epic.svg") 
+            p {{ task.type }}
+      td {{ task.project }}
       td {{ task.name }}
       td 
-          .table--block
-            img(src="../assets/img/people1.png")
-            | Юрій Коваленко
+        .table--block
+          img(src="../assets/img/people1.png")
+          | Юрій Коваленко
       td 
-          .table--block
-            img(src="../assets/img/people2.png")
-            | Юрій Коваленко
+        .table--block
+          img(src="../assets/img/people2.png")
+          | Юрій Коваленко
       td {{ task.description }}
       td
-          button.all(@click="allOptions(index)")
-            svg(
-              width="24",
-              height="24",
-              viewBox="0 0 24 24",
-              role="presentation"
-            )
-              g(fill="currentColor", fill-rule="evenodd")
-              circle(cx="5", cy="12", r="2")
-              circle(cx="12", cy="12", r="2")
-              circle(cx="19", cy="12", r="2")
+        button.all(@click="allOptions(index)")
+          svg(
+            width="24",
+            height="24",
+            viewBox="0 0 24 24",
+            role="presentation"
+          )
+            g(fill="currentColor", fill-rule="evenodd")
+            circle(cx="5", cy="12", r="2")
+            circle(cx="12", cy="12", r="2")
+            circle(cx="19", cy="12", r="2")
       .projects-tasks--options(v-if="showAllIndex === index")
         button(@click="editTask(index)") Редагувати
         button(@click="confirmDeleteTask(index)") Видалити
         router-link(
           :to="{ name: 'projectsItems', params: { key: $route.params.key, id: index } }"
-        )  Більше інформації
+        ) Більше інформації
 .background(v-if="confirmDelete", @close="close")
   .popup-confirm
     p Ви дійсно бажаєте видалити данну таску?
@@ -58,7 +70,7 @@ import TasksList from "./TasksList.vue";
 const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit"]);
 
 let tasks = inject("tasks");
-console.log(tasks)
+console.log(tasks);
 
 const showAllIndex = ref(-1);
 
@@ -89,7 +101,7 @@ const confirmDeleteTask = (index: number) => {
 
 const deleteTask = () => {
   if (deleteIndex.value !== -1) {
-    const tasksArray = tasks.value; 
+    const tasksArray = tasks.value;
     const deleteItem = tasksArray[deleteIndex.value];
     console.log(deleteItem);
     emit("tasks-delete", deleteItem);
@@ -173,6 +185,10 @@ const deleteTask = () => {
     .table--block {
       display: flex;
       align-items: center;
+      &-img {
+        display: flex;
+        align-items: center;
+      }
     }
     th {
       text-align: left;

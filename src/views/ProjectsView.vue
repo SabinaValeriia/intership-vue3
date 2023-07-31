@@ -4,7 +4,7 @@
         .projects--block(v-for="project in projects")
             .projects--block-item
                 img(:src="require(`../assets/img/${project.img}`)")
-                router-link(:to="{ name: 'projectsTasks', params: { key: project.key }}") {{ project.name }}
+                router-link(:to="{ name: 'canban', params: { key: project.key }}") {{ project.name }}
 </template>
 
 <script lang="ts" setup>
@@ -19,12 +19,20 @@ const projects = [
   {
     name: "Onix-time-management",
     key: "TIME",
-    img: "project1.svg"
+    img: "project1.svg",
+    index: 1
   },
   {
-    name: "Bracketology",
-    key: "Brack",
-    img: "project1.svg"
+    name: "Quentn Website (QW)",
+    key: "QW",
+    img: "quentn.svg",
+    index: 2
+  },
+  {
+    name: "Hotel Monthly  (HOT)",
+    key: "HOT",
+    img: "hot.png",
+    index: 3
   },
 ];
 </script>
@@ -40,11 +48,14 @@ const projects = [
     border-radius: 6px;
     margin: 30px 0;
     padding: 15px;
+    display: flex;
+    align-items: center;
     a {
         font-size: 24px;
         text-decoration: none;
         color: black;
         text-align: center;
+        margin-left: 10px;
     }
     img {
       width: 40px;

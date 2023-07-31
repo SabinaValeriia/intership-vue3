@@ -1,21 +1,21 @@
 <template lang="pug">
 header-component(@edit-task="editTask", @modal-new-task="newTask")
-router-view(@tasks-delete="deleteTask", @task-edit="editTasks")
+router-view(
+  @tasks-delete="deleteTask",
+  @task-edit="editTasks"
+)
 </template>
 
 <script lang="ts" setup>
 import HeaderComponent from "@/components/HeaderComponent.vue";
-import { Tasks } from "@/types/interfaceTask";
-import { ref, provide } from "vue";
-import { useRouter } from "vue-router";
+import { Tasks, Types } from "@/types/interfaceTask";
+import { ref, provide, onMounted, watch, inject, defineProps } from "vue";
+import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 
-// const tasks = ref<Tasks[]>([]);
-const tasks = ref<Tasks[][]>({
-  toDo: [], 
-  inProgress: [], 
-  review : [], 
-  done: []  
-});
+
+
+const tasks = ref<Tasks[]>([]);
+
 const deleteTask = (deleteItem: object) => {
   const taskIndex = tasks.value.findIndex((task) => task === deleteItem);
   if (taskIndex !== -1) {
@@ -47,10 +47,53 @@ const editTasks = (indexes: number) => {
 provide("indexEdit", indexEdit);
 
 const newTask = (newTaskCreate: any) => {
-  const task = { ...newTaskCreate, type: "toDo" };
-  tasks.value.toDo.push(task);
-  console.log(tasks);
+  const task = { ...newTaskCreate, typeColumn: Types.toDo };
+  const projectName = task.project;
+
+  tasks.value.push(task);
+  filteredTasks();
 };
+let filterTask = ref([]);
+
+const filteredTasks = () => {
+
+  if (Array.isArray(tasks.value)) {
+    const filteredToDo = tasks.value.filter(
+      (task) => task.typeColumn === Types.toDo
+    );
+
+    const filteredInProgress = tasks.value.filter(
+      (task) => task.typeColumn === Types.inProgress
+    );
+
+    const filteredReview = tasks.value.filter(
+      (task) => task.typeColumn === Types.review
+    );
+
+    const filteredDone = tasks.value.filter(
+      (task) => task.typeColumn === Types.done
+    );
+
+    filterTask.value = {
+      toDo: filteredToDo,
+      inProgress: filteredInProgress,
+      review: filteredReview,
+      done: filteredDone,
+    };
+  } else {
+    filterTask.value = {
+      toDo: [],
+      inProgress: [],
+      review: [],
+      done: [],
+    };
+  }
+};
+watch(tasks.value, () => {
+  filteredTasks();
+});
+
+provide("filterTask", filterTask);
 provide("showPopupEdit", showPopupEdit);
 </script>
 
