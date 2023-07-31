@@ -6,25 +6,24 @@
       h1.login Log in
       button#google-signin-button.main.google Log in with Google
       h2 Or continue with
-      label(for="email") Email Address
-      input#InputEmail(
-        :class="{ error: isError }",
-        placeholder="Type your email address",
-        v-model.trim="loginData.identifier",
-        @input="checkEmail",
-        @blur="checkEmail"
-      )
-      .error-message(v-if="emailError") {{ emailError }}
-      label.distance(for="password") Password
-      input#password(
-        :class="{ error: isError }",
-        type="password",
-        placeholder="Type your password",
-        v-model.trim="loginData.password",
-        @input="checkPassword",
-        @blur="checkPassword"
-      )
-      .error-message(v-if="passwordError") {{ passwordError }}
+      .form-group
+        label(for="email") Email Address
+        input#InputEmail(
+          :class="getValidationClass($v, 'identifier')"
+          placeholder="Type your email address",
+          v-model="form.identifier",
+          type="email"
+        )
+        .error-message(v-if="!$v.identifier.required.$invalid") Please enter a valid email address.
+      .form-group
+        label.distance(for="password") Password
+        input#password(
+          :class="getValidationClass($v, 'password')"
+          type="password",
+          placeholder="Type your password",
+          v-model="form.password"
+        )
+        .error-message(v-if="!$v.password.required.$invalid") Password must be at least 8 characters long.
       button.forgot Forgot your password?
       button#submit.main.log-in(type="submit", @click="submit") Log in
       p.login--distance New user?
@@ -34,35 +33,43 @@
 <script setup lang="ts">
 import userApi from "@/services/api/userApi";
 import router from "@/router";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, minLength } from "@vuelidate/validators";
+import {getValidationClass, checkValidation} from "@/types/authValidation"
 
-const loginData = ref({
+interface LoginData {
+  identifier: string;
+  password: string;
+}
+
+const defaultState: LoginData = {
   identifier: "",
   password: "",
+}
+
+const form = ref<LoginData>({
+  ...defaultState
+})
+
+const rules = computed(() => {
+  const rules: any = {
+    identifier: { required, email },
+    password: { required, minLength: minLength(8) },
+  };
+  return rules;
 });
 
+const $v = useVuelidate(rules, form);
 
-const emailError = ref("");
-const passwordError = ref("");
-const isError = ref(false);
-const isEmail = (identifier: string): boolean => {
-  //eslint-disable-next-line
-  const emailRegex =
-    // eslint-disable-next-line
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-  return emailRegex.test(identifier);
-};
-const isPassword = (password: string): boolean => {
-  const passwordRegex =
-    password.length < 8 || !/\d/.test(password) || !/[A-Z]/.test(password);
-
-  return !passwordRegex;
-};
 
 const submit = async () => {
-  userApi.loginUser(loginData.value).then((res) => {
+  
+  if(checkValidation($v.value)){
+    return;
+  }
+  userApi.loginUser(form.value).then((res) => {
     if (res) {
       const authToken = res.data.jwt;
       localStorage.setItem("isAuthenticated", authToken);
@@ -72,43 +79,8 @@ const submit = async () => {
   });
 };
 
-const checkEmail = () => {
-  const emailValue = loginData.value.identifier.trim();
-  if (!emailValue) {
-    emailError.value = "This field is required.";
-    isError.value = true;
-  } else if (!isEmail(emailValue)) {
-    emailError.value = "Please enter a valid email address.";
-    isError.value = true;
-  } else {
-    emailError.value = "";
-    isError.value = false;
-  }
-};
-
-const checkPassword = () => {
-  const passwordValue = loginData.value.password.trim();
-  if (!passwordValue) {
-    passwordError.value = "Password cannot be blank";
-    isError.value = true;
-  } else if (passwordValue.length < 8) {
-    passwordError.value =
-      "Password must be at least 8 characters long and contain at least one uppercase letter and one digit.";
-    isError.value = true;
-  } else {
-    passwordError.value = "";
-    isError.value = false;
-  }
-};
-
-const checkInputs = () => {
-  checkEmail();
-  checkPassword();
-  if (!isError.value) {
-    submit();
-  }
-};
 </script>
+
 <style lang="scss">
 @import "../styles/core/colors";
 
