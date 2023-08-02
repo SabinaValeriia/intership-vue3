@@ -18,10 +18,18 @@
     "description": {
       "type": "text"
     },
-    "key": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::project.project"
+    "project": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "typeColumn": {
+      "type": "string"
+    },
+    "index": {
+      "unique": false,
+      "type": "integer"
     }
   }
 }
