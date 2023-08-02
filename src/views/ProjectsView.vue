@@ -8,33 +8,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps } from "vue";
-const props = defineProps({
-  newTaskCreate: {
-    type: Array,
-  },
-})
-
-const projects = [
-  {
-    name: "Onix-time-management",
-    key: "TIME",
-    img: "project1.svg",
-    index: 1
-  },
-  {
-    name: "Quentn Website (QW)",
-    key: "QW",
-    img: "quentn.svg",
-    index: 2
-  },
-  {
-    name: "Hotel Monthly  (HOT)",
-    key: "HOT",
-    img: "hot.png",
-    index: 3
-  },
-];
+import { ref, onMounted, inject } from "vue";
+import projectsApi from "@/services/api/projectsApi";
+let projects = inject("projects");
 </script>
 
 <style lang="scss">

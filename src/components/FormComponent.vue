@@ -5,10 +5,10 @@ modal-component
     form
       label Проєкти
         span *
-      dropdown-component(:options="selectOptions" @input="input") 
+      dropdown-component(:options="selectOptions", @input="input") 
       label Тип таски
         span *
-      dropdown-component(:options="selectOptionsIssues" @input="inputProject")
+      dropdown-component(:options="selectOptionsIssues", @input="inputProject")
       label Назва
         span *
       input(
@@ -31,6 +31,7 @@ modal-component
 </template>
 
 <script setup lang="ts">
+import tasksApi from "@/services/api/tasksApi";
 import DropdownComponent from "./DropdownComponent.vue";
 import ModalComponent from "./ModalComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
@@ -73,7 +74,7 @@ const selectOptions = [
   },
 ];
 const selectOptionsIssues = [
-{
+  {
     name: "Задача",
     img: "task.svg",
   },
@@ -84,12 +85,14 @@ const selectOptionsIssues = [
   {
     name: "Епік",
     img: "epic.svg",
-  }
+  },
 ];
 let indexEdit = inject("indexEdit");
+console.log(indexEdit);
 
 const showEdit = computed(() => {
-  return indexEdit.value.length > 0;
+  console.log(indexEdit.value > 0);
+  return indexEdit.value > 0;
 });
 const taskNameInput = ref("");
 const taskDescriptionInput = ref("");
@@ -97,32 +100,35 @@ const taskTypeInput = ref("");
 const projectInput = ref("");
 const tasks = inject("tasks");
 
-
 const addTask = () => {
   const newTaskCreate: Tasks = {
-    name: taskNameInput.value,
-    description: taskDescriptionInput.value,
-    type: taskTypeInput.value,
-    project: projectInput.value,
+    data: {
+      name: taskNameInput.value,
+      description: taskDescriptionInput.value,
+      type: taskTypeInput.value,
+      project: projectInput.value,
+      typeColumn: "To Do",
+      index: Date.now(),
+    },
   };
   emit("modal-new-task", newTaskCreate);
-  provide("newTaskCreate", newTaskCreate);
 };
 
 const editTask = () => {
-  const editTask: Tasks = {
-    name: taskNameInput.value,
-    description: taskDescriptionInput.value,
-    type: taskTypeInput.value,
-    project: projectInput.value,
+  const dataEditTask: Tasks = {
+    data: {
+      name: taskNameInput.value,
+      description: taskDescriptionInput.value,
+      type: taskTypeInput.value,
+      project: projectInput.value,
+    },
   };
-  console.log(editTask);
-  emit("edit-task", editTask);
+  emit("edit-task", dataEditTask);
   emit("close-popup-edit");
 };
 
 const handleTaskAction = () => {
-  if (indexEdit.value.length > 0) {
+  if (showEdit.value) {
     editTask();
   } else {
     addTask();
@@ -130,7 +136,6 @@ const handleTaskAction = () => {
 };
 
 const input = (selected: any) => {
-  
   const regex = /\((.*?)\)/;
   const matches = selected.match(regex);
   if (matches && matches.length > 1) {
@@ -138,10 +143,10 @@ const input = (selected: any) => {
     projectInput.value = projectName;
     console.log(projectInput.value);
   }
-}
+};
 const inputProject = (selected: any) => {
-  taskTypeInput.value = selected
-}
+  taskTypeInput.value = selected;
+};
 </script>
 
 <style lang="scss" scoped>

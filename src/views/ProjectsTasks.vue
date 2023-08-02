@@ -10,9 +10,7 @@
       th Автор
       th Інфо
       th
-    tr(
-      v-for="(task, index) in tasks",
-    )
+    tr(v-for="(task, index) in tasks")
       td
         .table--block
           .table--block-img(v-if="task.type === 'Баг'")
@@ -67,10 +65,10 @@
 import ModalComponent from "../components/ModalComponent.vue";
 import { ref, onMounted, defineEmits, defineProps, inject } from "vue";
 import TasksList from "./TasksList.vue";
-const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit"]);
+import tasksApi from "@/services/api/tasksApi";
+const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit", "click-index-edit"]);
 
 let tasks = inject("tasks");
-console.log(tasks);
 
 const showAllIndex = ref(-1);
 
@@ -83,8 +81,8 @@ const allOptions = (index: number) => {
 };
 
 const editTask = (index: number) => {
-  const indexes = tasks;
-  emit("task-edit", indexes);
+  let clickIndexEdit = tasks.value[index].index;
+  emit("task-edit", clickIndexEdit);
 };
 
 const confirmDelete = ref(false);
@@ -100,13 +98,26 @@ const confirmDeleteTask = (index: number) => {
 };
 
 const deleteTask = () => {
-  if (deleteIndex.value !== -1) {
-    const tasksArray = tasks.value;
-    const deleteItem = tasksArray[deleteIndex.value];
-    console.log(deleteItem);
-    emit("tasks-delete", deleteItem);
-    deleteIndex.value = -1;
-  }
+  let index = tasks.value[deleteIndex.value].index;
+
+  tasksApi.showTasks().then((res) => {
+    if (res) {
+      const task = res.data.data.find(
+        (task) => task.attributes.index === index
+      );
+      if (task) {
+        tasksApi
+          .deleteTask(task.id)
+          .then(() => {
+            tasks.value.splice(task.id, 1);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  });
+
   close();
 };
 </script>
