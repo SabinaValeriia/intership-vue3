@@ -14,16 +14,16 @@
           v-model="form.identifier",
           type="email"
         )
-        .error-message(v-if="!$v.identifier.required.$invalid") Please enter a valid email address.
+        span.error-message(v-if="$v.identifier.required.$invalid && $v.identifier.$dirty") Please enter a valid email address.
       .form-group
         label.distance(for="password") Password
-        input#password(
+        input#InputPassword(
           :class="getValidationClass($v, 'password')"
           type="password",
           placeholder="Type your password",
           v-model="form.password"
         )
-        .error-message(v-if="!$v.password.required.$invalid") Password must be at least 8 characters long.
+        span.error-message(v-if="$v.password.required.$invalid && $v.password.$dirty") Password must be at least 8 characters long.
       button.forgot Forgot your password?
       button#submit.main.log-in(type="submit", @click="submit") Log in
       p.login--distance New user?
