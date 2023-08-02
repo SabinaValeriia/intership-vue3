@@ -95,9 +95,8 @@ const deleteTask = (deleteItem: number) => {
   console.log(deleteItem);
   emit("tasks-delete", deleteItem);
 };
-const editTask = (index: number) => {
-  const indexes = tasks.value;
-  emit("task-edit", indexes);
+const editTask = (clickIndexEdit: number) => {
+  emit("task-edit", clickIndexEdit);
 };
 const isBarHidden = ref(false);
 const hideBar = () => {

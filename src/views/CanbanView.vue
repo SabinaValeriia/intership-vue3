@@ -168,20 +168,20 @@ const getImageSrc = (type: string) => {
 const enabled = ref(true);
 const dragging = ref(false);
 
-watchEffect(() => {
-  if (
-    typeof filterTask.value === "object" &&
-    !Array.isArray(filterTask.value)
-  ) {
-    const filteredTasks = {};
-    for (const prop in filterTask.value) {
-      filteredTasks[prop] = filterTask.value[prop].filter(
-        (task) => task.project === projectKey
-      );
-    }
-    Object.assign(filterTask.value, filteredTasks);
-  }
-});
+// watchEffect(() => {
+//   if (
+//     typeof filterTask.value === "object" &&
+//     !Array.isArray(filterTask.value)
+//   ) {
+//     const filteredTasks = {};
+//     for (const prop in filterTask.value) {
+//       filteredTasks[prop] = filterTask.value[prop].filter(
+//         (task) => task.project === projectKey
+//       );
+//     }
+//     Object.assign(filterTask.value, filteredTasks);
+//   }
+// });
 </script>
 
 <style scoped lang="scss">

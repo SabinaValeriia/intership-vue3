@@ -5,9 +5,6 @@
     slot(name="content")
     div(slot="item" slot-scope="{close}")
       button.close(@click="$parent.$emit('close')")
-    //- .modals--block
-    //-   button.cancel(@click="close") Відміна
-    //-   button.create(@click="handleTaskAction") {{ showEdit ? "Зберегти" : "Додати" }}
 </template>
 <script setup lang="ts">
 import { ref, defineEmits, defineProps, computed, inject } from "vue";
@@ -23,16 +20,8 @@ const close = () => {
 let indexEdit = inject("indexEdit");
 
 const showEdit = computed(() => {
-  return indexEdit.value.length > 0;
+  return indexEdit.value > 0;
 });
-
-const handleTaskAction = () => {
-  if (indexEdit.value.length > 0) {
-    emit("edit-task");
-  } else {
-    emit("modal-new-task");
-  }
-};
 </script>
 
 <style lang="scss">

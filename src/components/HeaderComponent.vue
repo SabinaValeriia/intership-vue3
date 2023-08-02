@@ -44,8 +44,8 @@ const addNewTask = (newTask: Array<Tasks>) => {
   emit("new-task", newTask);
   closePopup();
 };
-const editTasks = (editTask: Array<Tasks>) => {
-  emit("edit-task", editTask);
+const editTasks = (dataEditTask: Array<Tasks>) => {
+  emit("edit-task", dataEditTask);
 };
 
 const handleTaskCreated = (showPopups: boolean) => {

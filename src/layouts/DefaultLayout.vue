@@ -1,9 +1,6 @@
 <template lang="pug">
 header-component(@edit-task="editTask", @modal-new-task="newTask")
-router-view(
-  @tasks-delete="deleteTask",
-  @task-edit="editTasks"
-)
+router-view(@task-edit="editTasks")
 </template>
 
 <script lang="ts" setup>
@@ -12,51 +9,82 @@ import { Tasks, Types } from "@/types/interfaceTask";
 import { ref, provide, onMounted, watch, inject, defineProps } from "vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 
+import projectsApi from "@/services/api/projectsApi";
+import tasksApi from "@/services/api/tasksApi";
 
-
-const tasks = ref<Tasks[]>([]);
-
-const deleteTask = (deleteItem: object) => {
-  const taskIndex = tasks.value.findIndex((task) => task === deleteItem);
-  if (taskIndex !== -1) {
-    tasks.value.splice(taskIndex, 1);
-  }
-  provide("taskIndex", taskIndex);
-};
+const projects = ref({});
+const tasks = ref({});
+onMounted(async () => {
+  projectsApi.showProjects().then((res) => {
+    if (res) {
+      projects.value = res.data.data.map((project: any) => project.attributes);
+    }
+  });
+  tasksApi.showTasks().then((res) => {
+    if (res) {
+      tasks.value = res.data.data.map((task: any) => task.attributes);
+    }
+  });
+});
+provide("projects", projects);
 
 provide("tasks", tasks);
 
 let indexEdit = ref(-1);
 const showPopupEdit = ref(false);
 const closeShowPopupEdit = ref(false);
-const editTask = (editTask: Tasks) => {
-  if (indexEdit.value.length > 0) {
-    indexEdit.value[0] = editTask;
-  }
+const editTask = (dataEditTask: Tasks) => {
+  tasksApi.showTasks().then((res) => {
+    if (res) {
+      const task = res.data.data.find(
+        (task) => task.attributes.index === indexEdit.value
+      );
+      if (task) {
+        tasksApi
+          .updateTask(task.id, dataEditTask)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  });
   showPopupEdit.value = false;
   closeShowPopupEdit.value = false;
 };
 
 provide("closeShowPopupEdit", closeShowPopupEdit);
 
-const editTasks = (indexes: number) => {
-  indexEdit.value = indexes;
+const editTasks = (clickIndexEdit: number) => {
+  indexEdit.value = clickIndexEdit;
   showPopupEdit.value = true;
 };
 
 provide("indexEdit", indexEdit);
 
 const newTask = (newTaskCreate: any) => {
-  const task = { ...newTaskCreate, typeColumn: Types.toDo };
-  const projectName = task.project;
-
-  tasks.value.push(task);
-  filteredTasks();
+  const jwtToken = localStorage.getItem("isAuthenticated");
+  const headers = {
+    Authorization: `Bearer ${jwtToken}`,
+  };
+  tasksApi
+    .createTask(newTaskCreate, headers)
+    .then((res) => {
+      const tasksItem = res.data.data.attributes;
+      const data = { ...tasksItem };
+      tasks.value.push(data);
+      filteredTasks();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
+
 let filterTask = ref([]);
 
 const filteredTasks = () => {
-
   if (Array.isArray(tasks.value)) {
     const filteredToDo = tasks.value.filter(
       (task) => task.typeColumn === Types.toDo

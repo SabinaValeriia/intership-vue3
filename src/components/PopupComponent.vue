@@ -30,7 +30,7 @@ const emit = defineEmits([
 let indexEdit = inject("indexEdit");
 
 const showEdit = computed(() => {
-  return indexEdit.value.length > 0;
+  return indexEdit.length > 0;
 });
 const closePopup = () => {
   emit("close");
@@ -55,7 +55,7 @@ const editTask = () => {
 };
 
 const handleTaskAction = () => {
-  if (indexEdit.value.length > 0) {
+  if (indexEdit.length > 0) {
     editTask();
   } else {
     addTask();

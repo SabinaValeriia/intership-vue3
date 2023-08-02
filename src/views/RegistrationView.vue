@@ -14,7 +14,7 @@ router-view
           placeholder="Type your email address",
           v-model="form.email"
         )
-        .error-message(v-if="!$v.email.required.$invalid") Please enter a valid email address.
+        .error-message(v-if="$v.email.required.$invalid && $v.email.$dirty") Please enter a valid email address.
       .form-group
         label.distance(for="name") Name
         input#name(
@@ -23,7 +23,7 @@ router-view
           placeholder="Type your name",
           v-model="form.username",
         )
-        .error-message(v-if="!$v.username.required.$invalid") This field os required.
+        .error-message(v-if="$v.username.required.$invalid && $v.username.$dirty") This field os required.
       .form-group
         label.distance(for="password") Password
         input#password(
@@ -32,7 +32,7 @@ router-view
           placeholder="Type your password",
           v-model="form.password"
         )
-        .error-message(v-if="!$v.password.required.$invalid") Password must be at least 8 characters long.
+        .error-message(v-if="$v.password.required.$invalid && $v.password.$dirty") Password must be at least 8 characters long.
       .form-group
         label.distance(for="role") User role
         input#role(
@@ -41,7 +41,7 @@ router-view
           placeholder="Type your role",
           v-model="form.role"
         )
-        .error-message(v-if="!$v.role.required.$invalid") This field os required.
+        .error-message(v-if="$v.role.required.$invalid && $v.role.$dirty") This field os required.
       //- .select-container#role
       //-   .select(@click="toggleSelect" @blur="checkRole" :class="{ error: isError }") {{ selectedText }}
       //-   .selectlist(v-show="isSelectOpen")

@@ -1,48 +1,30 @@
 <template lang="pug">
 .container-work 
-    .your-work
-        h1 Ваша робота
-        .block
-            h3 Нещодавні проекти 
-            router-link(:to="{ name: 'projects' }") Всі проєкти
-        .your-work--block
-            .your-work--block-item(v-for="work in works")
-                img(:src="require(`../assets/img/${work.img}`)")
-                .item
-                    router-link(:to="{ name: 'canban', params: { key: work.key }}") {{ work.name }}
-                    p {{ work.desc }}
-                    h5 швидкі посилання 
-                    h6 Мої відкриті задачі
-                    h6 Виконані задачі
-                    h6 {{ work.board}} дoшка
+  .your-work
+    h1 Ваша робота
+    .block
+      h3 Нещодавні проекти
+      router-link(:to="{ name: 'projects' }") Всі проєкти
+    .your-work--block
+      .your-work--block-item(v-for="project in projects")
+        img(:src="require(`../assets/img/${project.img}`)")
+        .item
+          router-link(:to="{ name: 'canban', params: { key: project.key } }") {{ project.name }}
+          p {{ project.description }}
+          h5 швидкі посилання
+          h6 Мої відкриті задачі
+          h6 Виконані задачі
+          h6 1 дoшка
+    .your-work--block(v-for="task in tasks")
+        p {{ task.name }}
+        p {{ task.description }}
+        p {{ task.key }}
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
-const works = [
-  {
-    name: "onix-time-manager",
-    desc: "Програмное обеспечение",
-    board: 1,
-    key: "TIME",
-    img: "project1.svg",
-  },
-  {
-    name: "Quentn Website (QW)",
-    desc: "Бизнес-проект, управляемый компанией",
-    key: "QW",
-    board: 1,
-    img: "quentn.svg",
-  },
-  {
-    name: "Hotel Monthly  (HOT)",
-    desc: "Програмное обеспечение",
-    board: 0,
-    key: "HOT",
-    img: "hot.png",
-  },
-];
+import { inject, onMounted, ref } from "vue";
+let tasks = inject("tasks");
+let projects = inject("projects");
 </script>
 
 <style lang="scss">
@@ -50,13 +32,12 @@ const works = [
   margin: 0 90px;
 }
 .your-work {
-    h1 {
-
-    }
-    .block {
-        display: flex;
-        justify-content: space-between;
-    }
+  h1 {
+  }
+  .block {
+    display: flex;
+    justify-content: space-between;
+  }
   &--block {
     display: flex;
     gap: 16px;
