@@ -30,7 +30,7 @@
       td 
         .table--block
           img(src="../assets/img/people1.png")
-          | Юрій Коваленко
+          | {{ task.team.data.attributes.name }}
       td 
         .table--block
           img(src="../assets/img/people2.png")

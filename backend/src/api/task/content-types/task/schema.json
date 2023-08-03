@@ -22,6 +22,20 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::project.project"
+    },
+    "project": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "typeColumn": {
+      "type": "string"
+    },
+    "team": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
     }
   }
 }

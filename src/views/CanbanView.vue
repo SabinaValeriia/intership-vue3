@@ -1,6 +1,31 @@
 <template lang="pug">
 .canban
-  h2 Дошка Kanban
+  .canban--block
+    h2 Дошка Kanban
+    .aselect(:data-value="value", :data-list="typeTasks")
+      .selector(@click="toggle()")
+        .label
+          span Тип: {{ valueTask }}
+        .arrow(:class="{ expanded: visible }")
+        div(:class="{ hidden: !visible, visible }")
+          ul
+            li(
+              :class="{ current: item === value }",
+              v-for="item in typeTasks",
+              @click="select(item); applyFilter()"
+            ) {{ item }}
+    .aselect(:data-value="value", :data-list="statusTasks")
+      .selector(@click="toggleStatus()")
+        .label
+          span Статус: {{ valueStatus }}
+        .arrow(:class="{ expanded: visibleStatus }")
+        div(:class="{ hidden: !visibleStatus, visibleStatus }")
+          ul
+            li(
+              :class="{ current: item === valueStatus }",
+              v-for="item in statusTasks",
+              @click="selectStatus(item); applyFilter()"
+            ) {{ item }}
   .columns
     .column
       h3 To Do
@@ -33,7 +58,7 @@
                   )
               .task-desc 
                 h6 {{ element.project }}
-                img(src="../assets/img/avatar.png")
+                p {{ element.team.data.attributes.name.charAt(0) }}
 
     .column
       h3 In Progress
@@ -66,7 +91,7 @@
                   )
               .task-desc 
                 h6 {{ element.project }}
-                img(src="../assets/img/avatar.png")
+                p {{ element.team.data.attributes.name.charAt(0) }}
     .column
       h3 Review
       draggable.list-group(
@@ -98,7 +123,7 @@
                   )
               .task-desc 
                 h6 {{ element.project }}
-                img(src="../assets/img/avatar.png")
+                p {{ element.team.data.attributes.name.charAt(0) }}
     .column
       h3 Done
       draggable.list-group(
@@ -130,7 +155,7 @@
                   )
               .task-desc 
                 h6 {{ element.project }}
-                img(src="../assets/img/avatar.png")
+                p {{ element.team.data.attributes.name.charAt(0) }}
 </template>
 
 <script lang="ts" setup>
@@ -148,6 +173,42 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import draggable from "vuedraggable";
+const typeTasks = ref(["Баг", "Задача", "Епік", "Всі"]);
+const statusTasks = ref(["To Do", "In Progress", "Review", "Done", "Всі"]);
+const visible = ref(false);
+const visibleStatus = ref(false);
+const valueTask = ref("Всі");
+const valueStatus = ref("Всі");
+
+const toggle = () => {
+  visible.value = !visible.value;
+};
+const toggleStatus = () => {
+  visibleStatus.value = !visibleStatus.value;
+};
+const select = (option) => {
+  valueTask.value = option;
+};
+
+const selectStatus = (option) => {
+  valueStatus.value = option;
+};
+
+watch([valueTask, valueStatus], () => {
+  applyFilter();
+});
+
+const applyFilter = () => {
+  if (typeof filterTask.value === "object") {
+    for (const prop in filterTask.value) {
+      filterTask.value[prop] = filterTask.value[prop].filter((task) => {
+        const typeMatch = valueTask.value === "Всі" || task.type === valueTask.value;
+        const statusMatch = valueStatus.value === "Всі" || task.typeColumn === valueStatus.value;
+        return typeMatch && statusMatch;
+      });
+    }
+  }
+};
 
 const filterTask = inject("filterTask");
 
@@ -185,8 +246,68 @@ const dragging = ref(false);
 </script>
 
 <style scoped lang="scss">
+.aselect {
+  min-width: 200px;
+  margin: 10px;
+  .selector {
+    border: none;
+    background: #f8f8f8;
+    position: relative;
+    z-index: 1;
+    .arrow {
+      position: absolute;
+      right: 10px;
+      top: 40%;
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 10px solid #888;
+      transition-duration: 0.3s;
+      transition-timing-function: cubic-bezier(0.59, 1.39, 0.37, 1.01);
+    }
+    .label {
+      display: block;
+      padding: 12px;
+      font-size: 16px;
+      color: #888;
+    }
+  }
+  ul {
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    border: 1px solid gainsboro;
+    position: absolute;
+    z-index: 1;
+    background: #fff;
+  }
+  li {
+    padding: 12px;
+    color: #666;
+    &:hover {
+      color: white;
+      background: seagreen;
+    }
+  }
+  .current {
+    background: #eaeaea;
+  }
+  .hidden {
+    visibility: hidden;
+  }
+  .visible {
+    visibility: visible;
+  }
+}
 .canban {
   padding: 40px;
+  &--block {
+    display: flex;
+    align-items: center;
+  }
 }
 .columns {
   display: flex;
@@ -222,6 +343,7 @@ h3 {
 .task-block {
   display: flex;
   justify-content: space-between;
+  height: 30px;
   .task-desc {
     display: flex;
     align-items: center;
@@ -232,6 +354,13 @@ h3 {
       &:first-child {
         margin-right: 5px;
       }
+    }
+    p {
+      background: #76b0ef;
+      padding: 7px;
+      border-radius: 36px;
+      width: 18px;
+      text-align: center;
     }
     h6 {
       padding: 0px;

@@ -11,9 +11,12 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 
 import projectsApi from "@/services/api/projectsApi";
 import tasksApi from "@/services/api/tasksApi";
+import teamsApi from "@/services/api/teamsApi";
 
 const projects = ref({});
 const tasks = ref({});
+const teams = ref({});
+const filterTask = ref({});
 onMounted(async () => {
   projectsApi.showProjects().then((res) => {
     if (res) {
@@ -23,10 +26,18 @@ onMounted(async () => {
   tasksApi.showTasks().then((res) => {
     if (res) {
       tasks.value = res.data.data.map((task: any) => task.attributes);
+      filterTask.value = res.data.data.map((task: any) => task.attributes);
+      filteredTasks();
     }
   });
+  teamsApi.showTeams().then((res) => {
+    if(res) {
+      teams.value = res.data.data.map((team: any) => team.attributes)
+    }
+  })
 });
 provide("projects", projects);
+provide("teams", teams);
 
 provide("tasks", tasks);
 
@@ -82,7 +93,6 @@ const newTask = (newTaskCreate: any) => {
     });
 };
 
-let filterTask = ref([]);
 
 const filteredTasks = () => {
   if (Array.isArray(tasks.value)) {
@@ -117,9 +127,6 @@ const filteredTasks = () => {
     };
   }
 };
-watch(tasks.value, () => {
-  filteredTasks();
-});
 
 provide("filterTask", filterTask);
 provide("showPopupEdit", showPopupEdit);

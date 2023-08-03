@@ -3,7 +3,7 @@ import ApiService from "../api";
 
 const tasksApi = {
   showTasks() {
-    return ApiService.get("tasks");
+    return ApiService.get("tasks?populate=*");
   },
   createTask(taskData: string, headers?: any) {
     return ApiService.post("tasks", taskData, headers);
