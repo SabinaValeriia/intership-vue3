@@ -15,16 +15,35 @@
           h6 Мої відкриті задачі
           h6 Виконані задачі
           h6 1 дoшка
-    .your-work--block(v-for="task in tasks")
-        p {{ task.name }}
-        p {{ task.description }}
-        p {{ task.key }}
+    .tasks--block(v-for="task in tasks")
+      img(
+        v-if="task.type === 'Баг'",
+        src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+        alt="Баг"
+      ) 
+      img(src="../assets/img/task.svg", v-else-if="task.type === 'Задача'")
+      img(src="../assets/img/epic.svg", v-else) 
+      p {{ task.project }}
+      p {{ task.name }}
+      p {{ task.key.data.attributes.name }}
 </template>
 
 <script lang="ts" setup>
+import projectsApi from "@/services/api/projectsApi";
+import tasksApi from "@/services/api/tasksApi";
 import { inject, onMounted, ref } from "vue";
-let tasks = inject("tasks");
-let projects = inject("projects");
+let projects = ref({});
+let tasks = ref({});
+projectsApi.showProjects().then((res) => {
+  if (res) {
+    projects.value = res.data.data.map((project: any) => project.attributes);
+  }
+});
+tasksApi.showTasks().then((res) => {
+  if (res) {
+    tasks.value = res.data.data.map((task: any) => task.attributes);
+  }
+});
 </script>
 
 <style lang="scss">
@@ -33,6 +52,14 @@ let projects = inject("projects");
 }
 .your-work {
   h1 {
+  }
+  .tasks--block {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #6b778c;
+     p {
+      margin-left: 20px;
+     }
   }
   .block {
     display: flex;

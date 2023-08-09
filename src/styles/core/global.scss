@@ -1,7 +1,8 @@
 @import "fonts";
 @import "colors";
 @import "variables";
-@import "../common/buttons.scss";
+@import "../core/media";
+@import "../common/buttons";
 
 html {
   overflow-x: hidden;

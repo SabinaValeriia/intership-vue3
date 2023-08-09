@@ -64,7 +64,7 @@ const newTask = (newTaskCreate:any) => {
 
 <style lang="scss" scoped>
 @import "../styles/core/colors";
-
+@import '../styles/core/media';
 .background {
   width: 100%;
   height: 100%;
@@ -145,7 +145,7 @@ const newTask = (newTaskCreate:any) => {
   }
 }
 
-@media (max-width: 768px) {
+@include media_tablet {
   .mobile {
     display: block;
   }

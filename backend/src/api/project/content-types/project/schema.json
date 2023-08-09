@@ -29,6 +29,12 @@
       "relation": "manyToMany",
       "target": "api::team.team",
       "inversedBy": "projects"
+    },
+    "head": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
     }
   }
 }

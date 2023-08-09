@@ -13,16 +13,10 @@ import projectsApi from "@/services/api/projectsApi";
 import tasksApi from "@/services/api/tasksApi";
 import teamsApi from "@/services/api/teamsApi";
 
-const projects = ref({});
 const tasks = ref({});
 const teams = ref({});
 const filterTask = ref({});
 onMounted(async () => {
-  projectsApi.showProjects().then((res) => {
-    if (res) {
-      projects.value = res.data.data.map((project: any) => project.attributes);
-    }
-  });
   tasksApi.showTasks().then((res) => {
     if (res) {
       tasks.value = res.data.data.map((task: any) => task.attributes);
@@ -30,14 +24,7 @@ onMounted(async () => {
       filteredTasks();
     }
   });
-  teamsApi.showTeams().then((res) => {
-    if(res) {
-      teams.value = res.data.data.map((team: any) => team.attributes)
-    }
-  })
 });
-provide("projects", projects);
-provide("teams", teams);
 
 provide("tasks", tasks);
 
@@ -93,7 +80,6 @@ const newTask = (newTaskCreate: any) => {
     });
 };
 
-
 const filteredTasks = () => {
   if (Array.isArray(tasks.value)) {
     const filteredToDo = tasks.value.filter(
@@ -134,6 +120,7 @@ provide("showPopupEdit", showPopupEdit);
 
 <style lang="scss" scoped>
 @import "../styles/core/colors";
+@import "../styles/core/media";
 body {
   margin: 0;
 }
@@ -228,7 +215,7 @@ body {
     }
   }
 }
-@media (max-width: 768px) {
+@include media_tablet {
   #tab3-content {
     display: block !important;
   }
@@ -243,14 +230,13 @@ body {
     width: 100%;
     min-height: 100vh;
     padding-bottom: 30px;
-  }
-}
-@media (max-width: 768px) {
-  .tablet {
-    display: none;
-  }
-  .mobile {
-    display: block;
+
+    .tablet {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
   }
 }
 </style>

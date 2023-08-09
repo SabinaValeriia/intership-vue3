@@ -59,19 +59,19 @@ const projects = [
     name: "Onix-time-management",
     key: "TIME",
     img: "project1.svg",
-    index: 1
+    index: 1,
   },
   {
     name: "Quentn Website (QW)",
     key: "QW",
     img: "quentn.svg",
-    index: 2
+    index: 2,
   },
   {
     name: "Hotel Monthly  (HOT)",
     key: "HOT",
     img: "hot.png",
-    index: 3
+    index: 3,
   },
 ];
 const route = useRoute();
@@ -106,6 +106,7 @@ const hideBar = () => {
 
 <style lang="scss">
 @import "../styles/core/colors";
+@import "../styles/core/media";
 body {
   margin: 0;
 }
@@ -300,7 +301,7 @@ body {
     }
   }
 }
-@media (max-width: 768px) {
+@include media_tablet {
   #tab3-content {
     display: block !important;
   }
@@ -316,8 +317,7 @@ body {
     min-height: 100vh;
     padding-bottom: 30px;
   }
-}
-@media (max-width: 768px) {
+
   .tablet {
     display: none;
   }

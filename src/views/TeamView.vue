@@ -18,9 +18,15 @@
 </template>
 
 <script lang="ts" setup>
+import teamsApi from "@/services/api/teamsApi";
 import { computed, inject, ref } from "vue";
-let teams = inject("teams");
+let teams = ref([]);
 const searchText = ref("");
+teamsApi.showTeams().then((res) => {
+  if (res) {
+    teams.value = res.data.data.map((team: any) => team.attributes);
+  }
+});
 
 const filteredTeams = computed(() => {
   if (!searchText.value.trim()) {

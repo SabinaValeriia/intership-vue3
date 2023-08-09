@@ -7,6 +7,7 @@
 
 
 <style lang="scss" scoped>
+@import '../styles/core/media';
 .auth {
   background: url("../assets/img/bg-tablet.png");
   background-position: center;
@@ -29,7 +30,7 @@
     margin: 32px 0 0 40px;
   }
 }
-@media(max-width: 768px) {
+@include media_tablet {
   .auth{
     &--block {
       margin-top: 0px;

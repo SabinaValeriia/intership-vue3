@@ -159,6 +159,7 @@
 </template>
 
 <script lang="ts" setup>
+import tasksApi from "@/services/api/tasksApi";
 import { Types } from "@/types/interfaceTask";
 import {
   computed,
@@ -209,8 +210,52 @@ const applyFilter = () => {
     }
   }
 };
+tasksApi.showTasks().then((res) => {
+  if (res) {
+    tasks.value = res.data.data
+      .map((task: any) => task.attributes)
+      .filter((taskAttributes: any) => {
+        return taskAttributes.key.data.attributes.key === route.params.key;
+      });
+      console.log(filterTask)
+      filteredTasks();
+  }
+});
+const filteredTasks = () => {
+  if (Array.isArray(tasks.value)) {
+    const filteredToDo = tasks.value.filter(
+      (task) => task.typeColumn === Types.toDo
+    );
 
-const filterTask = inject("filterTask");
+    const filteredInProgress = tasks.value.filter(
+      (task) => task.typeColumn === Types.inProgress
+    );
+
+    const filteredReview = tasks.value.filter(
+      (task) => task.typeColumn === Types.review
+    );
+
+    const filteredDone = tasks.value.filter(
+      (task) => task.typeColumn === Types.done
+    );
+
+    filterTask.value = {
+      toDo: filteredToDo,
+      inProgress: filteredInProgress,
+      review: filteredReview,
+      done: filteredDone,
+    };
+  } else {
+    filterTask.value = {
+      toDo: [],
+      inProgress: [],
+      review: [],
+      done: [],
+    };
+  }
+};
+const tasks = ref([]);
+const filterTask = ref([]);
 
 const route = useRoute();
 const projectKey = route.params.key;
@@ -229,20 +274,6 @@ const getImageSrc = (type: string) => {
 const enabled = ref(true);
 const dragging = ref(false);
 
-// watchEffect(() => {
-//   if (
-//     typeof filterTask.value === "object" &&
-//     !Array.isArray(filterTask.value)
-//   ) {
-//     const filteredTasks = {};
-//     for (const prop in filterTask.value) {
-//       filteredTasks[prop] = filterTask.value[prop].filter(
-//         (task) => task.project === projectKey
-//       );
-//     }
-//     Object.assign(filterTask.value, filteredTasks);
-//   }
-// });
 </script>
 
 <style scoped lang="scss">
@@ -337,7 +368,7 @@ h3 {
   background-color: white;
   padding: 10px;
   margin-bottom: 10px;
-  height: 54px;
+  min-height: 54px;
   border-radius: 6px;
 }
 .task-block {
@@ -369,7 +400,7 @@ h3 {
   }
 }
 
-@media (max-width: 375px) {
+@mixin media_mobile {
   .columns {
     flex-direction: column;
     gap: 20px;

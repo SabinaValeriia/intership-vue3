@@ -66,9 +66,19 @@ import ModalComponent from "../components/ModalComponent.vue";
 import { ref, onMounted, defineEmits, defineProps, inject } from "vue";
 import TasksList from "./TasksList.vue";
 import tasksApi from "@/services/api/tasksApi";
+import { useRoute } from "vue-router";
 const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit", "click-index-edit"]);
-
-let tasks = inject("tasks");
+let tasks = ref({});
+const route = useRoute();
+tasksApi.showTasks().then((res) => {
+  if (res) {
+    tasks.value = res.data.data
+      .map((task: any) => task.attributes)
+      .filter((taskAttributes: any) => {
+        return taskAttributes.key.data.attributes.key === route.params.key;
+      });
+  }
+});
 
 const showAllIndex = ref(-1);
 
