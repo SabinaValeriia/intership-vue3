@@ -1,31 +1,44 @@
 <template lang="pug">
 .team
-    .team--block
-        h1 People and teams
-        input(type="search" placeholder="Search for people and teams")
-        h2 You work with
-        .team--people
-            .team--people-block(v-for="people in team")
-                img(:src="require(`../assets/img/${people.img}`)")
-                h3 {{ people.name }}
-                p {{ people.nickName }}
+  .team--block
+    h1 People and teams
+    input(
+      type="search",
+      v-model="searchText",
+      placeholder="Search for people and teams"
+    )
+    h2 You work with
+    .team--people
+      .team--people-block(v-for="people in filteredTeams")
+        img(
+          :src="require(`../assets/img/${people.avatar.data.attributes.name}`)"
+        )
+        h3 {{ people.name }}
+        p {{ people.department.data.attributes.name }}
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import teamsApi from "@/services/api/teamsApi";
+import { computed, inject, ref } from "vue";
+let teams = ref([]);
+const searchText = ref("");
+teamsApi.showTeams().then((res) => {
+  if (res) {
+    teams.value = res.data.data.map((team: any) => team.attributes);
+  }
+});
 
-const team = [
-  {
-    name: "Yurii Kovalenko",
-    nickName: "yurii.kovalenko",
-    img: "people1.png",
-  },
-  {
-    name: "Marina Permakhova",
-    nickName: "marina.permakhova",
-    img: "people2.png",
-  },
-];
+const filteredTeams = computed(() => {
+  if (!searchText.value.trim()) {
+    return teams.value;
+  }
+
+  const searchTerm = searchText.value.trim().toLowerCase();
+  return teams.value.filter((people) => {
+    const name = people.name.toLowerCase();
+    return name.includes(searchTerm);
+  });
+});
 </script>
 
 <style lang="scss">
@@ -49,6 +62,7 @@ const team = [
       border-left: none;
       border-right: none;
       padding: 0 5px;
+      outline: none;
     }
   }
   &--people {
@@ -78,7 +92,7 @@ const team = [
         line-height: 16px;
         text-align: center;
       }
-      h3  {
+      h3 {
         text-align: center;
         margin: 0;
         font-size: 14px;

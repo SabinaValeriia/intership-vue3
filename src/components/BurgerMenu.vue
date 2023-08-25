@@ -34,6 +34,7 @@ const close = () => {
 
 <style lang="scss" scoped>
 @import '../styles/core/colors';
+@import '../styles/core/media';
 .burger-line {
   display: block;
   width: 20px;
@@ -72,7 +73,7 @@ const close = () => {
     height: 40px;
   }
 }
-@media (max-width: 768px) {
+@include media_tablet {
   .burger {
     display: block;
   }

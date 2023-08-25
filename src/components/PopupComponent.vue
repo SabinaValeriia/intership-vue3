@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { Tasks } from "@/types/interfaceTask";
-import { ref, defineEmits, defineProps, computed } from "vue";
+import { ref, defineEmits, defineProps, computed , inject} from "vue";
 
 const showPopups = ref(false);
 const emit = defineEmits([
@@ -27,19 +27,10 @@ const emit = defineEmits([
   "new-task",
   "close-popup-edit",
 ]);
+let indexEdit = inject("indexEdit");
 
-const props = defineProps({
-  indexEdit: {
-    type: Number,
-    required: true,
-  },
-  indexTap: {
-    type: Number,
-  },
-});
 const showEdit = computed(() => {
-  console.log(props.indexTap)
-  return props.indexEdit.length > 0;
+  return indexEdit.length > 0;
 });
 const closePopup = () => {
   emit("close");
@@ -58,12 +49,13 @@ const editTask = () => {
     name: taskNameInput.value,
     description: taskDescriptionInput.value,
   };
+  console.log(editTask)
   emit("edit-task", editTask);
   emit("close-popup-edit");
 };
 
 const handleTaskAction = () => {
-  if (props.indexEdit.length > 0) {
+  if (indexEdit.length > 0) {
     editTask();
   } else {
     addTask();

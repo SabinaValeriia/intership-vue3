@@ -1,51 +1,49 @@
 <template lang="pug">
 .container-work 
-    .your-work
-        h1 Ваша робота
-        .block
-            h3 Нещодавні проекти 
-            router-link(:to="{ name: 'projects' }") Всі проєкти
-        .your-work--block
-            .your-work--block-item(v-for="work in works")
-                img(:src="require(`../assets/img/${work.img}`)")
-                .item
-                    h4 {{ work.name }}
-                    p {{ work.desc }}
-                    h5 швидкі посилання 
-                    h6 Мої відкриті задачі
-                    h6 Виконані задачі
-                    h6 {{ work.board}} дoшка
+  .your-work
+    h1 Ваша робота
+    .block
+      h3 Нещодавні проекти
+      router-link(:to="{ name: 'projects' }") Всі проєкти
+    .your-work--block
+      .your-work--block-item(v-for="project in projects")
+        img(:src="require(`../assets/img/${project.img}`)")
+        .item
+          router-link(:to="{ name: 'canban', params: { key: project.key } }") {{ project.name }}
+          p {{ project.description }}
+          h5 швидкі посилання
+          h6 Мої відкриті задачі
+          h6 Виконані задачі
+          h6 1 дoшка
+    .tasks--block(v-for="task in tasks")
+      img(
+        v-if="task.type === 'Баг'",
+        src="https://onix-systems.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+        alt="Баг"
+      ) 
+      img(src="../assets/img/task.svg", v-else-if="task.type === 'Задача'")
+      img(src="../assets/img/epic.svg", v-else) 
+      p {{ task.project }}
+      p {{ task.name }}
+      p {{ task.key.data.attributes.name }}
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
-const works = [
-  {
-    name: "onix-time-manager",
-    desc: "Програмное обеспечение",
-    board: 1,
-    img: "project1.svg",
-  },
-  {
-    name: "Goals",
-    desc: "Бизнес-проект, управляемый компанией",
-    board: 1,
-    img: "project1.svg",
-  },
-  {
-    name: "Onix: Resource Exchange",
-    desc: "Програмное обеспечение",
-    board: 0,
-    img: "project1.svg",
-  },
-  {
-    name: "Pre-Sale II",
-    desc: "Програмное обеспечение",
-    board: 0,
-    img: "project1.svg",
-  },
-];
+import projectsApi from "@/services/api/projectsApi";
+import tasksApi from "@/services/api/tasksApi";
+import { inject, onMounted, ref } from "vue";
+let projects = ref({});
+let tasks = ref({});
+projectsApi.showProjects().then((res) => {
+  if (res) {
+    projects.value = res.data.data.map((project: any) => project.attributes);
+  }
+});
+tasksApi.showTasks().then((res) => {
+  if (res) {
+    tasks.value = res.data.data.map((task: any) => task.attributes);
+  }
+});
 </script>
 
 <style lang="scss">
@@ -53,13 +51,20 @@ const works = [
   margin: 0 90px;
 }
 .your-work {
-    h1 {
-
-    }
-    .block {
-        display: flex;
-        justify-content: space-between;
-    }
+  h1 {
+  }
+  .tasks--block {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #6b778c;
+     p {
+      margin-left: 20px;
+     }
+  }
+  .block {
+    display: flex;
+    justify-content: space-between;
+  }
   &--block {
     display: flex;
     gap: 16px;
@@ -82,9 +87,12 @@ const works = [
       }
       .item {
         margin: 0 0 0 10px;
-        h4 {
+        a {
           margin: 18px 0 0;
           font-size: 14px;
+          color: black;
+          text-decoration: none;
+          font-weight: bold;
         }
         h5 {
           font-size: 11px;
