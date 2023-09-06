@@ -1,23 +1,30 @@
-
 .main {
-    height: 46px;
-    padding: 12px 0;
+    height: 24px;
+    padding: 14px 0;
     width: 100%;
-    background: $dark-grey;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 4px;
+    background: #79a276;
+    border-radius: 8px;
     font-family: var(--font-inter);
     font-style: normal;
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 17px;
-    color: $light-white;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0b0f0a;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
     cursor: pointer;
     border: none;
+    a {
+        font-family: var(--font-inter);
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
+        color: #0b0f0a;
+        text-decoration: none;
+    }
 }
 
 .google {
@@ -35,18 +42,18 @@
     cursor: pointer;
 }
 .log-in {
-    margin: 74px auto 16px;
+    margin: 16px auto 0;
     width: 100%;
-    height: 46px;
+    height: 52px;
 }
-.sign-up {
-    font-size: 13px;
-    line-height: 20px;
-    text-align: right;
-    color: $grey;
-    text-decoration: underline;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 0;
-}
+// .sign-up {
+//     font-size: 13px;
+//     line-height: 20px;
+//     text-align: right;
+//     color: $grey;
+//     text-decoration: underline;
+//     border: none;
+//     background: transparent;
+//     cursor: pointer;
+//     padding: 0;
+// }

@@ -1,11 +1,25 @@
 export interface CreateUserInterface {
+  username: string;
+  email: string;
+  role: string;
+  password: string;
+}
+
+export interface AuthUserInterface {
+  identifier: string;
+  password: string;
+}
+
+export interface ResUser {
+  jwt: string;
+  user: {
+    id: number;
     username: string;
     email: string;
-    role: string;
-    password: string;
-  }
-  
-  export interface AuthUserInterface {
-    identifier: string;
-    password: string;
-  }
+    provider: string;
+    confirmed: boolean;
+    blocked: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+}

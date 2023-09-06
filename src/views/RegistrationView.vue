@@ -3,74 +3,61 @@ router-view
 .account--bg
   .account--block
     form#form.account--block-form(@submit.prevent="submit")
-      img.account--logo-mobile(src="../assets/img/academy-logo-tablet.svg")
-      h1 Sign up
-      button.main.google Sign up with Google
-      h2 Or continue with
-      .form-group(:class="getValidationClass($v, 'email')")
-        label(for="email") Email Address
-        input#InputEmail(
-          :class="{ error: $v.email.$dirty && $v.email.$invalid || $v.email.$dirty && $v.email.required.$invalid}",
-          placeholder="Type your email address",
-          v-model="form.email"
-        )
-        span.error-message(
-          v-if="$v.email.$dirty && $v.email.required.$invalid"
-        ) This field is required. 
-        span.error-message(
-          v-else-if="$v.email.$dirty && $v.email.$invalid") Please enter a valid email address.
+      h1 Registration
+      p Already have an account?
+        router-link.green(to="login") Log in
       .form-group(:class="getValidationClass($v, 'username')")
-        label.distance(for="name") Name
+        label.distance(for="name") Username
         input#name(
-          :class="{ error: $v.username.$dirty && $v.username.$invalid || $v.username.$dirty && $v.username.required.$invalid}",
           type="name",
-          placeholder="Type your name",
-          v-model="form.username"
+          placeholder="Tom",
+          v-model="form.username",
+          @blur="$v.username.$touch()"
         )
         span.error-message(
-          v-if="$v.username.$dirty && $v.username.required.$invalid"
+          v-if="$v.username.required.$invalid"
         ) This field is required. 
+      .form-group(:class="getValidationClass($v, 'email')")
+        label(for="email") Email
+        input#InputEmail(
+          placeholder="mail@gmail.com",
+          v-model="form.email",
+          @blur="$v.email.$touch()"
+        )
+        span.error-message(
+          v-if="$v.email.required.$invalid"
+        ) This field is required. 
+        span.error-message(
+          v-else-if="$v.email.$invalid") Please enter a valid email address.
       .form-group(:class="getValidationClass($v, 'password')")
         label.distance(for="password") Password
         input#password(
-          :class="{ error: $v.password.$dirty && $v.password.$invalid || $v.password.$dirty && $v.password.required.$invalid}",
           type="password",
-          placeholder="Type your password",
-          v-model="form.password"
+          placeholder="*********",
+          v-model="form.password",
+          @blur="$v.password.$touch()"
         )
         span.error-message(
-          v-if="$v.password.$dirty && $v.password.required.$invalid"
+          v-if="$v.password.required.$invalid"
         ) This field is required. 
         span.error-message(
-          v-else-if="$v.password.$dirty && $v.password.$invalid") Password must be at least 8 characters long.
-      .form-group(:class="getValidationClass($v, 'role')")
-        label.distance(for="role") User role
-        input#role(
-          :class="{ error: $v.role.$dirty && $v.role.$invalid || $v.role.$dirty && $v.role.required.$invalid}",
-          type="text",
-          placeholder="Type your role",
-          v-model="form.role"
-        )
-        span.error-message(
-          v-if="$v.role.$dirty && $v.role.required.$invalid"
-        ) This field is required. 
-        span.error-message(
-          v-else-if="$v.role.$dirty && $v.role.$invalid") Role must be at least 3 characters long.
+          v-else-if="$v.password.minLength.$invalid") Password must be at least 8 characters long.
       button#submit.main.log-in(type="submit") Sign up
-      p Already have an account?
-        router-link.sign-up(to="login") Log in
+        i.loader(v-if="isLoading")
+      h2 By signing up to create an account I accept<br> Company’s 
+        span Terms of Use and Privacy Policy
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from "vue";
-import userApi from "@/services/api/userApi";
+import userApi, { registerUser } from "@/services/api/userApi";
 import axios from "axios";
 import router from "@/router";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
 import { getValidationClass, checkValidation } from "@/types/authValidation";
 import { CreateUserInterface } from "@/types/userApiInterface";
-
+const isLoading = ref(false);
 const options = ref(["Administration", "User"]);
 const selectedOptionIndex = ref(-1);
 const isSelectOpen = ref(false);
@@ -101,7 +88,7 @@ const defaultState: RegistrationData = {
   username: "",
   email: "",
   password: "",
-  role: "",
+  role: "authorization",
 };
 
 const form = ref<RegistrationData>({
@@ -120,21 +107,18 @@ const rules = computed(() => {
 
 const $v = useVuelidate(rules, form);
 
-const submit = async () => {
+const submit = () => {
+  isLoading.value = true;
   if (checkValidation($v.value)) {
+    isLoading.value = false;
     return;
   }
-  userApi.registerUser(form.value).then((res: CreateUserInterface) => {
+  registerUser(form.value).then((res) => {
     if (res) {
       router.push({ name: "login" });
-      console.log(res);
     }
   });
 };
-
-onMounted(() => {
-  localStorage.removeItem("isAuthenticated");
-});
 </script>
 <style lang="scss">
 @import "../styles/core/colors.scss";

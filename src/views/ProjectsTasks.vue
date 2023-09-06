@@ -10,7 +10,7 @@
       th Автор
       th Інфо
       th
-    tr(v-for="(task, index) in tasks")
+    tr(v-for="(task, index) in tasksStore.result")
       td
         .table--block
           .table--block-img(v-if="task.type === 'Баг'")
@@ -65,20 +65,16 @@
 import ModalComponent from "../components/ModalComponent.vue";
 import { ref, onMounted, defineEmits, defineProps, inject } from "vue";
 import TasksList from "./TasksList.vue";
-import tasksApi from "@/services/api/tasksApi";
+import tasksApi, { showTasks } from "@/services/api/tasksApi";
 import { useRoute } from "vue-router";
+import { useTasksStore } from "@/store";
 const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit", "click-index-edit"]);
 let tasks = ref({});
 const route = useRoute();
-tasksApi.showTasks().then((res) => {
-  if (res) {
-    tasks.value = res.data.data
-      .map((task: any) => task.attributes)
-      .filter((taskAttributes: any) => {
-        return taskAttributes.key.data.attributes.key === route.params.key;
-      });
-  }
-});
+const projectKey = route.params.key;
+const tasksStore = useTasksStore();
+
+tasksStore.fetchTasksByFilter(projectKey);
 
 const showAllIndex = ref(-1);
 
@@ -91,7 +87,7 @@ const allOptions = (index: number) => {
 };
 
 const editTask = (index: number) => {
-  let clickIndexEdit = tasks.value[index].index;
+  let clickIndexEdit = tasksStore.result[index].index;
   emit("task-edit", clickIndexEdit);
 };
 
@@ -108,11 +104,11 @@ const confirmDeleteTask = (index: number) => {
 };
 
 const deleteTask = () => {
-  let index = tasks.value[deleteIndex.value].index;
+  let index = tasksStore.result[deleteIndex.value].index;
 
-  tasksApi.showTasks().then((res) => {
-    if (res) {
-      const task = res.data.data.find(
+  showTasks().then((data) => {
+    if (data) {
+      const task = data.data.find(
         (task) => task.attributes.index === index
       );
       if (task) {

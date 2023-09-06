@@ -25,23 +25,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, inject, computed } from "vue";
-import projectsApi from "@/services/api/projectsApi";
-const projects = ref({});
-projectsApi.showProjects().then((res) => {
-  if (res) {
-    projects.value = res.data.data.map((project: any) => project.attributes);
-  }
-});
+import { computed, ref } from "vue";
+import { useTasksStore } from "@/store";
+const tasksStore = useTasksStore();
+tasksStore.fetchProjects();
 
 const searchText = ref("");
 const searchProjects = computed(() => {
   if (!searchText.value.trim()) {
-    return projects.value;
+    return tasksStore.projectsRes;
   }
 
   const searchTerm = searchText.value.trim().toLowerCase();
-  return projects.value.filter((project) => {
+  return tasksStore.projectsRes.filter((project) => {
     const name = project.name.toLowerCase();
     return name.includes(searchTerm);
   });

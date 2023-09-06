@@ -27,10 +27,10 @@
               @click="selectStatus(item); applyFilter()"
             ) {{ item }}
   .columns
-    .column
-      h3 To Do
+    .column(v-for="valueTask in valueTasks")
+      h3 {{ valueTask.name }}
       draggable.list-group(
-        v-model="filterTask.toDo",
+        v-model="filterTask[valueTask.value]",
         group="tasksGroup",
         :disabled="!enabled",
         item-key="item",
@@ -59,118 +59,15 @@
               .task-desc 
                 h6 {{ element.project }}
                 p {{ element.team.data.attributes.name.charAt(0) }}
-
-    .column
-      h3 In Progress
-      draggable.list-group(
-        v-model="filterTask.inProgress",
-        group="tasksGroup",
-        :disabled="!enabled",
-        item-key="name",
-        ghost-class="ghost",
-        @start="dragging = true",
-        @end="dragging = false"
-      )
-        template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
-            .task-block
-              .task-desc
-                img(
-                  :src="require(`../assets/img/${getImageSrc(element.type)}`)"
-                )
-                svg(
-                  width="24",
-                  height="24",
-                  viewBox="0 0 24 24",
-                  role="presentation"
-                )
-                  path(
-                    d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
-                    fill="currentColor",
-                    fill-rule="evenodd"
-                  )
-              .task-desc 
-                h6 {{ element.project }}
-                p {{ element.team.data.attributes.name.charAt(0) }}
-    .column
-      h3 Review
-      draggable.list-group(
-        v-model="filterTask.review",
-        group="tasksGroup",
-        :disabled="!enabled",
-        item-key="name",
-        ghost-class="ghost",
-        @start="dragging = true",
-        @end="dragging = false"
-      )
-        template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
-            .task-block
-              .task-desc
-                img(
-                  :src="require(`../assets/img/${getImageSrc(element.type)}`)"
-                )
-                svg(
-                  width="24",
-                  height="24",
-                  viewBox="0 0 24 24",
-                  role="presentation"
-                )
-                  path(
-                    d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
-                    fill="currentColor",
-                    fill-rule="evenodd"
-                  )
-              .task-desc 
-                h6 {{ element.project }}
-                p {{ element.team.data.attributes.name.charAt(0) }}
-    .column
-      h3 Done
-      draggable.list-group(
-        v-model="filterTask.done",
-        group="tasksGroup",
-        :disabled="!enabled",
-        item-key="name",
-        ghost-class="ghost",
-        @start="dragging = true",
-        @end="dragging = false"
-      )
-        template(#item="{ element }")
-          .task-item(:class="{ 'not-draggable': !enabled }") {{ element.name }}
-            .task-block
-              .task-desc
-                img(
-                  :src="require(`../assets/img/${getImageSrc(element.type)}`)"
-                )
-                svg(
-                  width="24",
-                  height="24",
-                  viewBox="0 0 24 24",
-                  role="presentation"
-                )
-                  path(
-                    d="M16 12c0-1.9-1.3-3.4-3-3.9V4c0-.6-.4-1-1-1s-1 .4-1 1v4.1c-1.7.4-3 2-3 3.9s1.3 3.4 3 3.9V20c0 .6.4 1 1 1s1-.4 1-1v-4.1c1.7-.5 3-2 3-3.9zm-4 2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z",
-                    fill="currentColor",
-                    fill-rule="evenodd"
-                  )
-              .task-desc 
-                h6 {{ element.project }}
-                p {{ element.team.data.attributes.name.charAt(0) }}
 </template>
 
 <script lang="ts" setup>
-import tasksApi from "@/services/api/tasksApi";
+import { showTasksByFilter } from "@/services/api/tasksApi";
+import { useTasksStore } from "@/store";
 import { Types } from "@/types/interfaceTask";
 import {
-  computed,
-  defineComponent,
-  inject,
-  onMounted,
-  provide,
   ref,
-  defineEmits,
   watch,
-  watchEffect,
 } from "vue";
 import { useRoute } from "vue-router";
 import draggable from "vuedraggable";
@@ -180,6 +77,36 @@ const visible = ref(false);
 const visibleStatus = ref(false);
 const valueTask = ref("Всі");
 const valueStatus = ref("Всі");
+const tasks = ref([]);
+const filterTask = ref([]);
+const route = useRoute();
+const projectKey = route.params.key;
+const enabled = ref(true);
+const dragging = ref(false);
+const projectValue = route.params.key;
+
+
+const valueTasks = [
+  {
+    name: "To Do",
+    value: "toDo",
+  },
+  {
+    name: "In Progress",
+    value: "inProgress",
+  },
+  {
+    name: "Review",
+    value: "review",
+  },
+  {
+    name: "Done",
+    value: "done",
+  },
+];
+const tasksStore = useTasksStore();
+
+tasksStore.fetchTasksByFilter(projectValue);
 
 const toggle = () => {
   visible.value = !visible.value;
@@ -195,47 +122,38 @@ const selectStatus = (option) => {
   valueStatus.value = option;
 };
 
-watch([valueTask, valueStatus], () => {
-  applyFilter();
-});
-
 const applyFilter = () => {
   if (typeof filterTask.value === "object") {
     for (const prop in filterTask.value) {
       filterTask.value[prop] = filterTask.value[prop].filter((task) => {
-        const typeMatch = valueTask.value === "Всі" || task.type === valueTask.value;
-        const statusMatch = valueStatus.value === "Всі" || task.typeColumn === valueStatus.value;
+        const typeMatch =
+          valueTask.value === "Всі" || task.type === valueTask.value;
+        const statusMatch =
+          valueStatus.value === "Всі" || task.typeColumn === valueStatus.value;
         return typeMatch && statusMatch;
       });
     }
   }
 };
-tasksApi.showTasks().then((res) => {
-  if (res) {
-    tasks.value = res.data.data
-      .map((task: any) => task.attributes)
-      .filter((taskAttributes: any) => {
-        return taskAttributes.key.data.attributes.key === route.params.key;
-      });
-      console.log(filterTask)
-      filteredTasks();
-  }
-});
+
+
+
 const filteredTasks = () => {
-  if (Array.isArray(tasks.value)) {
-    const filteredToDo = tasks.value.filter(
+  if (Array.isArray(tasksStore.result)) {
+    console.log(tasksStore.result);
+    const filteredToDo = tasksStore.result.filter(
       (task) => task.typeColumn === Types.toDo
     );
 
-    const filteredInProgress = tasks.value.filter(
+    const filteredInProgress = tasksStore.result.filter(
       (task) => task.typeColumn === Types.inProgress
     );
 
-    const filteredReview = tasks.value.filter(
+    const filteredReview = tasksStore.result.filter(
       (task) => task.typeColumn === Types.review
     );
 
-    const filteredDone = tasks.value.filter(
+    const filteredDone = tasksStore.result.filter(
       (task) => task.typeColumn === Types.done
     );
 
@@ -245,6 +163,7 @@ const filteredTasks = () => {
       review: filteredReview,
       done: filteredDone,
     };
+    console.log(2);
   } else {
     filterTask.value = {
       toDo: [],
@@ -252,14 +171,11 @@ const filteredTasks = () => {
       review: [],
       done: [],
     };
+    console.log(1);
   }
 };
-const tasks = ref([]);
-const filterTask = ref([]);
-
-const route = useRoute();
-const projectKey = route.params.key;
-const emit = defineEmits(["projectKeyChanged"]);
+filteredTasks();
+console.log(filterTask.value);
 
 const getImageSrc = (type: string) => {
   if (type === "Баг") {
@@ -270,10 +186,9 @@ const getImageSrc = (type: string) => {
     return "epic.svg";
   }
 };
-
-const enabled = ref(true);
-const dragging = ref(false);
-
+watch([valueTask, valueStatus], () => {
+  applyFilter();
+});
 </script>
 
 <style scoped lang="scss">

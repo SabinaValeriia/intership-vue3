@@ -1,10 +1,5 @@
-import { ProjectsInterface } from "@/types/projectsApiInterface";
-import ApiService from "../api";
+import axiosInstance from ".";
 
-const projectsApi = {
-  showProjects() {
-    return ApiService.get("projects");
-  },
+export const showProjects = () => {
+  return axiosInstance.get("projects");
 };
-
-export default projectsApi;

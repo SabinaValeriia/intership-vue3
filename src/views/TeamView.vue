@@ -11,18 +11,18 @@
     .team--people
       .team--people-block(v-for="people in filteredTeams")
         img(
-          :src="require(`../assets/img/${people.avatar.data.attributes.name}`)"
+          :src="require(`../assets/img/${people.avatar.name}`)"
         )
         h3 {{ people.name }}
         p {{ people.department.data.attributes.name }}
 </template>
 
 <script lang="ts" setup>
-import teamsApi from "@/services/api/teamsApi";
+import {showTeams} from "@/services/api/teamsApi";
 import { computed, inject, ref } from "vue";
 let teams = ref([]);
 const searchText = ref("");
-teamsApi.showTeams().then((res) => {
+showTeams().then((res) => {
   if (res) {
     teams.value = res.data.data.map((team: any) => team.attributes);
   }

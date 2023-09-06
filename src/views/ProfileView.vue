@@ -9,7 +9,7 @@
     h2 About you
     form(@submit.prevent="checkInputs")
         label Full name
-        input(type="text" v-model="form.name" placeholder="Full name" :class="{ error: isError }")
+        input(type="text" v-model="form.name" placeholder="Full name" )
         .error-message(v-if="allError") {{ allError }}
         label Public name
         input(type="text" v-model="form.publicName" placeholder="Public name")
@@ -20,7 +20,7 @@
         input(type="text" v-model="form.department" placeholder="Department")
         .error-message(v-if="allError") {{ allError }}
         label Email
-        input(type="email" v-model="form.email" placeholder="Email" :class="{ error: isError }" )
+        input(type="email" v-model="form.email" placeholder="Email")
         .error-message(v-if="emailError") {{ emailError }}
         button(type="submit" @click="submit" ) Save
 </template>

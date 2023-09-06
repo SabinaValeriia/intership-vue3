@@ -1,9 +1,5 @@
-import ApiService from "../api";
+import axiosInstance from "../api";
 
-const teamsApi = {
-  showTeams() {
-    return ApiService.get("teams?populate=*");
-  },
+export const showTeams = () => {
+  return axiosInstance.get("teams?populate=*");
 };
-
-export default teamsApi;

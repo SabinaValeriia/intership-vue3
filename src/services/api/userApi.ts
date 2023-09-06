@@ -1,13 +1,17 @@
-import { AuthUserInterface, CreateUserInterface } from "@/types/userApiInterface";
-import ApiService from "../api";
+import {
+  AuthUserInterface,
+  CreateUserInterface,
+  ResUser,
+} from "@/types/userApiInterface";
+import axiosInstance from "../api";
 
-const userApi = {
-  registerUser(userData: CreateUserInterface) {
-    return ApiService.post("auth/local/register", userData);
-  },
-  loginUser(userData: AuthUserInterface) {
-    return ApiService.post("auth/local", userData);
-  },
+export const loginUser = (userData: AuthUserInterface) => {
+  return axiosInstance.post<ResUser>("auth/local", userData);
+};
+export const registerUser = (userData: CreateUserInterface) => {
+  return axiosInstance.post<ResUser>("auth/local/register", userData);
 };
 
-export default userApi;
+export const showUsers = (headers: object) => {
+  return axiosInstance.get("users/me?populate=*", headers);
+};

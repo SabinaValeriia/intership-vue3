@@ -24,21 +24,14 @@
       "target": "api::department.department",
       "inversedBy": "departments"
     },
-    "avatar": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
-      "type": "media",
-      "multiple": false
-    },
     "projects": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::project.project",
       "mappedBy": "teams"
+    },
+    "avatar": {
+      "type": "json"
     }
   }
 }

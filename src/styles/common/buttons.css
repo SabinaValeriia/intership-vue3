@@ -15,21 +15,14 @@ button.main {
   margin: 0 auto;
   cursor: pointer;
   border: none;
+  
 }
 button.google {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-button.forgot {
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--grey);
-  background: transparent;
-  border: none;
-  display: block;
-  cursor: pointer;
-}
+
 button.log-in {
   margin: 74px auto 16px;
   width: 100%;

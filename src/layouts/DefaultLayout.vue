@@ -10,21 +10,12 @@ import { ref, provide, onMounted, watch, inject, defineProps } from "vue";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 
 import projectsApi from "@/services/api/projectsApi";
-import tasksApi from "@/services/api/tasksApi";
+import tasksApi, { showTasks } from "@/services/api/tasksApi";
 import teamsApi from "@/services/api/teamsApi";
 
 const tasks = ref({});
 const teams = ref({});
 const filterTask = ref({});
-onMounted(async () => {
-  tasksApi.showTasks().then((res) => {
-    if (res) {
-      tasks.value = res.data.data.map((task: any) => task.attributes);
-      filterTask.value = res.data.data.map((task: any) => task.attributes);
-      filteredTasks();
-    }
-  });
-});
 
 provide("tasks", tasks);
 
@@ -32,7 +23,7 @@ let indexEdit = ref(-1);
 const showPopupEdit = ref(false);
 const closeShowPopupEdit = ref(false);
 const editTask = (dataEditTask: Tasks) => {
-  tasksApi.showTasks().then((res) => {
+  showTasks().then((res) => {
     if (res) {
       const task = res.data.data.find(
         (task) => task.attributes.index === indexEdit.value

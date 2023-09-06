@@ -11,9 +11,6 @@ export const getValidationClass = (form: any, fieldName: string) => {
   let error = false;
   if (field) {
     error = field.$invalid && !field.$ending && field.$dirty;
-    console.log(1)
-  } else {
-    console.log(2)
   }
   return {
     error,

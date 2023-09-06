@@ -18,6 +18,16 @@ const routes: Array<RouteRecordRaw> = [
         name: "Registration",
         component: () => import("../views/RegistrationView.vue"),
       },
+      {
+        path: "forgot",
+        name: "Forgot",
+        component: () => import("../views/ForgotPasswordView.vue"),
+      },
+      {
+        path: "reset",
+        name: "Reset",
+        component: () => import("../views/ResetView.vue"),
+      },
     ],
   },
   {
