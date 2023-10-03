@@ -63,7 +63,7 @@
 
 <script lang="ts" setup>
 import { showTasksByFilter } from "@/services/api/tasksApi";
-import { useTasksStore } from "@/store";
+import { useStore } from "@/store";
 import { Types } from "@/types/interfaceTask";
 import {
   ref,
@@ -104,7 +104,7 @@ const valueTasks = [
     value: "done",
   },
 ];
-const tasksStore = useTasksStore();
+const tasksStore = useStore();
 
 tasksStore.fetchTasksByFilter(projectValue);
 

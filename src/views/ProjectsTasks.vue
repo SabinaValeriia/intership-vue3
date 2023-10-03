@@ -67,12 +67,12 @@ import { ref, onMounted, defineEmits, defineProps, inject } from "vue";
 import TasksList from "./TasksList.vue";
 import tasksApi, { showTasks } from "@/services/api/tasksApi";
 import { useRoute } from "vue-router";
-import { useTasksStore } from "@/store";
+import { useStore } from "@/store";
 const emit = defineEmits(["tasks-updated", "tasks-delete", "task-edit", "click-index-edit"]);
 let tasks = ref({});
 const route = useRoute();
 const projectKey = route.params.key;
-const tasksStore = useTasksStore();
+const tasksStore = useStore();
 
 tasksStore.fetchTasksByFilter(projectKey);
 

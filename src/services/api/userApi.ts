@@ -12,6 +12,6 @@ export const registerUser = (userData: CreateUserInterface) => {
   return axiosInstance.post<ResUser>("auth/local/register", userData);
 };
 
-export const showUsers = (headers: object) => {
-  return axiosInstance.get("users/me?populate=*", headers);
-};
+// export const showUsers = () => {
+//   return axiosInstance.get("users/me?populate=*");
+// };

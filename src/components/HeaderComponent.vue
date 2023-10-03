@@ -1,24 +1,23 @@
 <template lang="pug">
-.container
-  .header(:style="{ background: $route.meta.background + ' !important' }")
-    .header--block
-      img(src="../assets/img/logo.svg")
-      ul
-        li 
-          router-link(:to="{ name: 'your-work' }") Ваша робота
-        li 
-          router-link(:to="{ name: 'projects' }") Проєкти
-        li 
-          router-link(:to="{ name: 'team' }") Команда
-        button(@click="openPopup") Cтворити
-    .header--block
-      router-link(:to="{ name: 'profile' }")
-        img.avatar(src="../assets/img/questions.svg")
-      router-link(:to="{ name: 'profile' }")
-        img.avatar.distance(src="../assets/img/settings.svg")
-      router-link(:to="{ name: 'profile' }")
-        img.avatar(src="../assets/img/union.svg")
-  burger-menu.mobile
+.header(:style="{ background: $route.meta.background + ' !important' }")
+  .header--block
+    img(src="../assets/img/logo.svg")
+    ul
+      li 
+        router-link(:to="{ name: 'your-work' }") Ваша робота
+      li 
+        router-link(:to="{ name: 'projects' }") Проєкти
+      li 
+        router-link(:to="{ name: 'team' }") Команда
+      button(@click="openPopup") Cтворити
+  .header--block
+    router-link(:to="{ name: 'profile' }")
+      img.avatar(src="../assets/img/questions.svg")
+    router-link(:to="{ name: 'profile' }")
+      img.avatar.distance(src="../assets/img/settings.svg")
+    router-link(:to="{ name: 'profile' }")
+      img.avatar(src="../assets/img/union.svg")
+burger-menu.mobile
 form-component(
   v-if="showPopup || showPopupEdit",
   @close="closePopup",
@@ -95,7 +94,7 @@ const newTask = (newTaskCreate: any) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #b8e5b5;
+  background: $bright-green;
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
   .search {
     margin-right: 15px;
@@ -141,7 +140,7 @@ const newTask = (newTaskCreate: any) => {
       }
       a {
         text-decoration: none;
-        color: #0b0f0a;
+        color: $font-black;
       }
     }
   }

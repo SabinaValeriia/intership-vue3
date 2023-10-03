@@ -1,8 +1,18 @@
 import axios, { AxiosRequestConfig } from "axios";
-
+function getJwtToken(): any {
+  const jwt = localStorage.getItem("isAuthenticated");
+  if (jwt) {
+    return jwt;
+  } else {
+    return "";
+  }
+}
 const axiosInstance = axios.create({
   baseURL: "http://localhost:1337/api",
   timeout: 1000,
+    // headers: {
+    //   Authorization: `Bearer ${getJwtToken()}`,
+    // },
 });
 
 export const get = (resource: any, config?: AxiosRequestConfig) => {

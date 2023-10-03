@@ -15,3 +15,14 @@ export const deleteTask = (taskId: number) => {
 export const updateTask = (taskId: number, taskData: string, headers?: any) => {
   return axiosInstance.put(`tasks/${taskId}`, taskData, headers);
 }
+
+export const showFavoriteTasks = () => {
+  return axiosInstance.get("favorites?populate=*");
+}
+
+export const addFavoriteTask = (data: object) => {
+  return axiosInstance.post("favorites", data);
+}
+export const deleteFavoriteTask = (taskId: number) => {
+  return axiosInstance.delete(`favorites/${taskId}`);
+}

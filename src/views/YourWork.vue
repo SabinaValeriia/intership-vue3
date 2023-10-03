@@ -80,7 +80,7 @@
 
 <script lang="ts" setup>
 import { showUsers } from "@/services/api/userApi";
-import { useTasksStore } from "@/store";
+import { useStore } from "@/store";
 import { ref } from "vue";
 const activeTab = ref(0);
 const users = ref({});
@@ -89,7 +89,7 @@ const showTab = (tabIndex: number) => {
   activeTab.value = tabIndex;
 };
 
-const tasksStore = useTasksStore();
+const tasksStore = useStore();
 tasksStore.fetchTasks();
 tasksStore.fetchProjects();
 tasksStore.fetchUsers();

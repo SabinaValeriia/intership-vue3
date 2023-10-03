@@ -59,14 +59,14 @@ interface LoginData {
   password: string;
 }
 
-const defaultState: LoginData = {
-  identifier: "",
-  password: "",
-};
 // const defaultState: LoginData = {
-//   identifier: "valeriia@gmail.com",
-//   password: "12345678",
+//   identifier: "",
+//   password: "",
 // };
+const defaultState: LoginData = {
+  identifier: "test@gmail.com",
+  password: "12345678",
+};
 
 const form = ref<LoginData>({
   ...defaultState,
