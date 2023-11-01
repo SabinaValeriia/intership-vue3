@@ -1,12 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import { createPinia } from "pinia"; 
+
 
 const app = createApp(App);
-app.use(store);
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
-app.mount('#app');
+app.mount("#app");
 
-// Export the tasks ref
-export { router };
+export { router, pinia };

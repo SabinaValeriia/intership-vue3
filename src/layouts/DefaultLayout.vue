@@ -1,43 +1,117 @@
 <template lang="pug">
-header-component(@new-task="addNewTask" :indexTap="indexTap" :showPopupEdit="showPopupEdit" :closeShowPopupEdit="closeShowPopupEdit" :indexEdit="indexEdit" @open-popup="openPopup" @edit-task="editTask")
-router-view(:tasks="tasks" @task-delete="deleteTask" @task-edit="editTasks" @task-edit-index="taskEditIndex")
+header-component(@edit-task="editTask", @modal-new-task="newTask")
+router-view(@task-edit="editTasks")
 </template>
 
 <script lang="ts" setup>
 import HeaderComponent from "@/components/HeaderComponent.vue";
-import { Tasks } from "@/types/interfaceTask";
-import { ref } from "vue";
-const tasks = ref<Tasks[]>([]);
+import { Tasks, Types } from "@/types/interfaceTask";
+import { ref, provide, onMounted, watch, inject, defineProps } from "vue";
+import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
 
+import projectsApi from "@/services/api/projectsApi";
+import tasksApi, { showTasks } from "@/services/api/tasksApi";
+import teamsApi from "@/services/api/teamsApi";
 
-const addNewTask = (newTask: any) => {
-  tasks.value.push(newTask);
-};
-const deleteTask = (deleteItem: object) => {
-  const index = tasks.value.findIndex((task) => task === deleteItem);
-  if (index !== -1) {
-    tasks.value.splice(index, 1);
-  }
-};
+const tasks = ref({});
+const teams = ref({});
+const filterTask = ref({});
+
+provide("tasks", tasks);
+
 let indexEdit = ref(-1);
 const showPopupEdit = ref(false);
 const closeShowPopupEdit = ref(false);
-const editTask = (editTask: Tasks) => {
-  if (indexEdit.value.length > 0) {
-    indexEdit.value[0] = editTask;
-  }
+const editTask = (dataEditTask: Tasks) => {
+  showTasks().then((res) => {
+    if (res) {
+      const task = res.data.data.find(
+        (task) => task.attributes.index === indexEdit.value
+      );
+      if (task) {
+        tasksApi
+          .updateTask(task.id, dataEditTask)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+  });
   showPopupEdit.value = false;
   closeShowPopupEdit.value = false;
 };
 
-const editTasks = (indexes: number) => {
-  indexEdit.value = indexes;
+provide("closeShowPopupEdit", closeShowPopupEdit);
+
+const editTasks = (clickIndexEdit: number) => {
+  indexEdit.value = clickIndexEdit;
   showPopupEdit.value = true;
 };
+
+provide("indexEdit", indexEdit);
+
+const newTask = (newTaskCreate: any) => {
+  const jwtToken = localStorage.getItem("isAuthenticated");
+  const headers = {
+    Authorization: `Bearer ${jwtToken}`,
+  };
+  tasksApi
+    .createTask(newTaskCreate, headers)
+    .then((res) => {
+      const tasksItem = res.data.data.attributes;
+      const data = { ...tasksItem };
+      tasks.value.push(data);
+      filteredTasks();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const filteredTasks = () => {
+  if (Array.isArray(tasks.value)) {
+    const filteredToDo = tasks.value.filter(
+      (task) => task.typeColumn === Types.toDo
+    );
+
+    const filteredInProgress = tasks.value.filter(
+      (task) => task.typeColumn === Types.inProgress
+    );
+
+    const filteredReview = tasks.value.filter(
+      (task) => task.typeColumn === Types.review
+    );
+
+    const filteredDone = tasks.value.filter(
+      (task) => task.typeColumn === Types.done
+    );
+
+    filterTask.value = {
+      toDo: filteredToDo,
+      inProgress: filteredInProgress,
+      review: filteredReview,
+      done: filteredDone,
+    };
+  } else {
+    filterTask.value = {
+      toDo: [],
+      inProgress: [],
+      review: [],
+      done: [],
+    };
+  }
+};
+
+provide("filterTask", filterTask);
+provide("showPopupEdit", showPopupEdit);
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../styles/core/colors";
+@import "../styles/core/media";
 body {
   margin: 0;
 }
@@ -132,7 +206,7 @@ body {
     }
   }
 }
-@media (max-width: 768px) {
+@include media_tablet {
   #tab3-content {
     display: block !important;
   }
@@ -147,14 +221,13 @@ body {
     width: 100%;
     min-height: 100vh;
     padding-bottom: 30px;
-  }
-}
-@media (max-width: 768px) {
-  .tablet {
-    display: none;
-  }
-  .mobile {
-    display: block;
+
+    .tablet {
+      display: none;
+    }
+    .mobile {
+      display: block;
+    }
   }
 }
 </style>

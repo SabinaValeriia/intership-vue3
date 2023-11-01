@@ -1,52 +1,46 @@
 <template lang="pug">
-.container
-    .header(:style="{ background: $route.meta.background + ' !important' }")
-        .header--block
-          img(src="../assets/img/academy-logo.svg")
-          ul
-            li 
-              router-link(:to="{ name: 'your-work' }") Ваша робота
-            li 
-              router-link(:to="{ name: 'projects' }") Проєкти
-            li 
-              router-link(:to="{ name: 'team' }") Команда
-            button(@click="openPopup") Cтворити
-        .header--block
-          input.search(type="search", name="", placeholder="Search")
-          router-link(:to="{ name: 'profile' }")
-            img.avatar(src="../assets/img/avatar.png")
-    burger-menu.mobile
-.background(v-if="showPopup || showPopupEdit")
-    popup-component(@close="closePopup" @new-task="addNewTask" @edit-task="editTasks" :tasks="tasks" :indexEdit="indexEdit" :indexTap="indexTap" @close-popup-edit="closeEdit")
+.header(:style="{ background: $route.meta.background + ' !important' }")
+  .header--block
+    img(src="../assets/img/logo.svg")
+    ul
+      li 
+        router-link(:to="{ name: 'your-work' }") Ваша робота
+      li 
+        router-link(:to="{ name: 'projects' }") Проєкти
+      li 
+        router-link(:to="{ name: 'team' }") Команда
+      button(@click="openPopup") Cтворити
+  .header--block
+    router-link(:to="{ name: 'profile' }")
+      img.avatar(src="../assets/img/questions.svg")
+    router-link(:to="{ name: 'profile' }")
+      img.avatar.distance(src="../assets/img/settings.svg")
+    router-link(:to="{ name: 'profile' }")
+      img.avatar(src="../assets/img/union.svg")
+burger-menu.mobile
+form-component(
+  v-if="showPopup || showPopupEdit",
+  @close="closePopup",
+  @modal-new-task="newTask",
+  @edit-task="editTasks"
+)
 </template>
 
 <script lang="ts" setup>
-import {
-  ref, defineEmits, defineProps
-} from "vue";
+import FormComponent from "./FormComponent.vue";
+import { ref, defineEmits, defineProps, inject } from "vue";
 import BurgerMenu from "../components/BurgerMenu.vue";
 import PopupComponent from "../components/PopupComponent.vue";
+import ModalComponent from "../components/ModalComponent.vue";
 import { Tasks } from "@/types/interfaceTask";
 const showPopup = ref(false);
-const emit  = defineEmits(["new-task", "edit-task"]);
-const props = defineProps({
-  indexEdit: {
-    type: Number,
-  },
-  showPopupEdit: {
-    type: Boolean,
-  },
-  closeShowPopupEdit: {
-    type: Boolean,
-  },
-  indexTap: {
-    type: Number
-  }
-});
+const emit = defineEmits(["new-task", "edit-task", "modal-new-task"]);
 const openPopup = () => {
   showPopup.value = true;
 };
 
+let showPopupEdit = inject("showPopupEdit");
+let closeShowPopupEdit = inject("closeShowPopupEdit");
 const closePopup = () => {
   showPopup.value = false;
 };
@@ -54,8 +48,8 @@ const addNewTask = (newTask: Array<Tasks>) => {
   emit("new-task", newTask);
   closePopup();
 };
-const editTasks = (editTask: Array<Tasks>) => {
-  emit("edit-task", editTask);
+const editTasks = (dataEditTask: Array<Tasks>) => {
+  emit("edit-task", dataEditTask);
 };
 
 const handleTaskCreated = (showPopups: boolean) => {
@@ -65,12 +59,15 @@ const handleTaskCreated = (showPopups: boolean) => {
 const handleTaskEdit = (showEdit: any) => {
   showPopup.value = showEdit;
 };
-
+const newTask = (newTaskCreate: any) => {
+  emit("modal-new-task", newTaskCreate);
+  closePopup();
+};
 </script>
 
 <style lang="scss" scoped>
 @import "../styles/core/colors";
-
+@import "../styles/core/media";
 .background {
   width: 100%;
   height: 100%;
@@ -97,7 +94,8 @@ const handleTaskEdit = (showEdit: any) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #76b0ef;
+  background: $bright-green;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.15);
   .search {
     margin-right: 15px;
     width: 200px;
@@ -128,16 +126,32 @@ const handleTaskEdit = (showEdit: any) => {
       list-style: none;
       margin-right: 15px;
       font-family: "Inter", sans-serif;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 20px;
+      display: flex;
+      align-items: center;
+      &::after {
+        content: "";
+        display: block;
+        background: url("../assets/img/arrow-bottom.svg");
+        width: 10px;
+        height: 6px;
+        margin-left: 8px;
+      }
       a {
         text-decoration: none;
-        color: black;
+        color: $font-black;
       }
     }
   }
   img {
-    height: 40px;
+    height: 34px;
+    &.avatar {
+      height: 30px;
+      &.distance {
+        margin: 0 22px;
+      }
+    }
   }
   button {
     background: #ffcf03;
@@ -151,7 +165,7 @@ const handleTaskEdit = (showEdit: any) => {
   }
 }
 
-@media (max-width: 768px) {
+@include media_tablet {
   .mobile {
     display: block;
   }
